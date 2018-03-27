@@ -1,0 +1,128 @@
+body {  
+	margin: 0;
+	background-image: url("../images/background.png");
+	background-position: center;
+	background-attachment: fixed;
+	color: #ffffff;
+	text-align: center;
+	font-family: Arial, Sans-serif;
+}
+
+ul.topnav {	
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+ul.topnav li {
+	float: left; 
+	}
+
+ul.topnav li a {
+	transition: background-color 0.5s ease-in-out;
+    display: block;
+    color: #ffffff;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+ul.topnav li a:hover:not(.active) {
+	background-color: #0e0e0e;
+	}
+
+ul.topnav li a.active {
+	background-color: #0e0e0e;
+	}
+
+div.content {
+	margin:0;
+	background-color: #333;
+	text-align: left;
+	position: relative;  
+	left:255px;
+	width: 50%;
+	border: 0% #111111;
+}
+
+
+
+div.content2 {
+	margin:0;
+	background-color: #333;
+	position: relative; 
+	left:255px;
+	width: 50%;
+	border: 0% #111111;
+}
+
+div.topsidebox {
+	transition: background-color 0.5s ease-in-out;
+	position: absolute;
+	overflow:hidden;
+	background-color: #333;
+	right: 10%;
+	top: 75px; 	
+	width: 15%;
+}
+
+div.midsidebox {
+	transition: background-color 0.5s ease-in-out;
+	position: absolute;
+	overflow:hidden;
+	background-color: #333;
+	right: 10%;
+	top: 275px; 	
+	width: 15%;
+}
+
+div.botsidebox {
+	transition: background-color 0.5s ease-in-out;
+	position: absolute;
+	overflow:hidden;
+	background-color: #333;
+	right: 10%;
+	top: 450px; 	
+	width: 15%;
+} 
+
+img.toplogo1 {
+	position: relative;
+	top: 3px;
+	left: 10%;
+	margin: 0;
+	display: block;
+	width: 20%;
+	height: 20%;
+}
+
+
+img.toplogo2 {
+	position: relative;
+	top: 3px;
+	left: -45%;
+	margin: 0;
+	display: block;
+	width: 20%;
+	height: 20%;
+}
+
+img.postpicture {
+	width: 40%;
+	transition: width 0.7s ease-out;
+}
+
+img.postpicture:hover {
+	width: 90%;
+}
+
+a:link, a:visited {
+	color: #ffffff;
+	text-decoration: underline;
+}
+							
+a:link:active, a:visited:active, a:hover {
+	color: #000000;
+}
