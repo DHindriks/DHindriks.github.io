@@ -37,25 +37,40 @@ ul.topnav li a.active {
 	background-color: #0e0e0e;
 	}
 
-div.content {
-	margin:0;
+div.contentleft {
+	margin:25px;
+	border: 16px solid #333;
 	background-color: #333;
 	text-align: left;
 	position: relative;  
 	left:255px;
 	width: 50%;
-	border: 0% #111111;
+	height: 300px;
 }
 
 
 
-div.content2 {
-	margin:0;
+div.contentright {
+	margin:25px;
+	border: 16px solid #333;
 	background-color: #333;
-	position: relative; 
+	text-align: right;
+	position: relative;  
 	left:255px;
 	width: 50%;
-	border: 0% #111111;
+	height: 300px;
+}
+
+img.imgleft {
+	height: 300px;
+	width:auto;
+	float:left;	
+}
+
+img.imgright {
+	height: 300px;
+	width:auto;
+	float:right;	
 }
 
 div.topsidebox {
