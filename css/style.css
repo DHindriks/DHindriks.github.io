@@ -38,7 +38,12 @@ ul.topnav li a.active {
 	}
 
 div.contentleft {
-	margin:25px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-right:0 auto;
+    margin-left:0 auto;
+	float:center;
+	overflow:auto;
 	border: 16px solid #333;
 	background-color: #333;
 	text-align: left;
@@ -51,7 +56,12 @@ div.contentleft {
 
 
 div.contentright {
-	margin:25px;
+	margin-top: 15px;
+    margin-bottom: 15px;
+    margin-right:0 auto;
+    margin-left:0 auto;
+	float:center;
+	overflow:auto;
 	border: 16px solid #333;
 	background-color: #333;
 	text-align: right;
