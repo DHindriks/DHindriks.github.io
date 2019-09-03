@@ -10,6 +10,7 @@ body {
 
 ul.topnav {	
     list-style-type: none;
+	text-align: center;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -34,21 +35,22 @@ ul.topnav li a:hover:not(.active) {
 	}
 
 ul.topnav li a.active {
-	background-color: #0e0e0e;
+	background-color: #ffd400;
+	color: #000000;
 	}
 
 div.contentleft {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     margin-right:0 auto;
     margin-left:0 auto;
+	left: 25%;
 	float:center;
 	overflow:auto;
 	border: 16px solid #333;
 	background-color: #333;
 	text-align: left;
 	position: relative;  
-	left:255px;
 	width: 50%;
 	height: 300px;
 }
@@ -56,62 +58,48 @@ div.contentleft {
 
 
 div.contentright {
-	margin-top: 15px;
-    margin-bottom: 15px;
+	margin-top: 20px;
+    margin-bottom: 20px;
     margin-right:0 auto;
     margin-left:0 auto;
+	left: 25%;
 	float:center;
 	overflow:auto;
 	border: 16px solid #333;
 	background-color: #333;
 	text-align: right;
 	position: relative;  
-	left:255px;
 	width: 50%;
 	height: 300px;
 }
 
+div.contentlarge {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right:0 auto;
+    margin-left:0 auto;
+	left: 25%;
+	float:center;
+	overflow:auto;
+	border: 16px solid #333;
+	background-color: #333;
+	text-align: left;
+	position: relative;  
+	width: 50%;
+	height: auto;
+}
+
 img.imgleft {
-	height: 300px;
-	width:auto;
+	height: 100%;
 	float:left;	
 }
 
 img.imgright {
-	height: 300px;
-	width:auto;
+	height: 100%;
 	float:right;	
 }
 
-div.topsidebox {
-	transition: background-color 0.5s ease-in-out;
-	position: absolute;
-	overflow:hidden;
-	background-color: #333;
-	right: 10%;
-	top: 75px; 	
-	width: 15%;
-}
 
-div.midsidebox {
-	transition: background-color 0.5s ease-in-out;
-	position: absolute;
-	overflow:hidden;
-	background-color: #333;
-	right: 10%;
-	top: 275px; 	
-	width: 15%;
-}
-
-div.botsidebox {
-	transition: background-color 0.5s ease-in-out;
-	position: absolute;
-	overflow:hidden;
-	background-color: #333;
-	right: 10%;
-	top: 450px; 	
-	width: 15%;
-} 
 
 img.toplogo1 {
 	position: relative;
