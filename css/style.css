@@ -3,6 +3,8 @@ body {
 	background-image: url("../images/background.png");
 	background-position: center;
 	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: cover;
 	color: #ffffff;
 	text-align: center;
 	font-family: Arial, Sans-serif;
