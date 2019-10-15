@@ -92,6 +92,22 @@ div.contentlarge {
 	height: auto;
 }
 
+div.ScrollWindow {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right:0 auto;
+    margin-left:0 auto;
+	left: 25%;
+	float:center;
+	overflow:scroll;
+	border: 16px solid #1e1e1e;
+	background-color: #1e1e1e;
+	text-align: left;
+	position: relative;  
+	width: 50%;
+	height: 20px;
+}
+
 img.imgleft {
 	height: 100%;
 	float:left;	
@@ -102,7 +118,15 @@ img.imgright {
 	float:right;	
 }
 
+pre{
+	height: 40pc;
+	background-color: #1e1e1e;
+	overflow: scroll;
+}
 
+pre:hover {
+	height: 50pc;
+}
 
 img.toplogo1 {
 	position: relative;

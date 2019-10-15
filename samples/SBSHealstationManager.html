@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Healstation manager </title>
+<link rel="icon" type="image/png" href="../images/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+<body>
+
+<ul class="topnav">
+	<li><a href="../index.html">Home</a></li>
+	<li><a href="../projects.html">My projects</a></li>
+	<li><a href="../codesamples.html">Code samples</a></li>
+	<li><a href="../contact.html">Contact</a></li>
+</ul>
+
+<div class=contentlarge style="width: 80%; left:10%">
+<h1>Healstation manager</h1>
+<p>The randomly chosen points that heal the player in <a href="../games/SpaceArena.html">Space battle arena.</a></p>
+<div class=CodeWindow>
+<pre>
+    <code>
+    using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class HealStationManager : MonoBehaviour {
+
+    [SerializeField]
+    int ActiveAmount;
+
+    [SerializeField]
+    List<HealStation> HealStations = new List<HealStation>();
+
+
+    List<HealStation> Actives = new List<HealStation>();
+    List<HealStation> InActives = new List<HealStation>();
+	// Use this for initialization
+	void Start () {
+        Getstations();
+        SetManager();
+	}
+	
+    public void Getstations()
+    {
+        Actives.Clear();
+        InActives.Clear();
+
+        foreach (HealStation station in HealStations)
+        {
+            if (station.Active == true)
+            {
+                Actives.Add(station);
+            }else if (station.Skip == false)
+            {
+                InActives.Add(station);
+            }
+        }
+        if (Actives.Count < ActiveAmount)
+        {
+            PickNew();
+        }
+        ResetSkippables();
+    }
+
+    void PickNew()
+    {
+        int RandomStation = Random.Range(0, InActives.Count);
+        HealStation pickedStation = InActives[RandomStation];
+        pickedStation.ToggleActive();
+        Getstations();
+    }
+
+    void ResetSkippables()
+    {
+        foreach (HealStation station in HealStations)
+        {
+            station.Skip = false;
+        }
+    }
+
+    void SetManager()
+    {
+        foreach (HealStation station in HealStations)
+        {
+            station.Manager = this;
+        }
+    }
+}
+
+    </code>
+	</pre>
+</div>
+<h3>Script function</h3>
+<p>This script manages the healstations that appear in the arena.<br>
+The healstations are always in the same places, but only 2 will be active at a time.<br>
+At the start of the game, the manager picks 2 stations to activate. Every time the player uses one, another one is randomly picked with tge Getstations() function.<br></p>
+<h3>Challenges I encountered</h3>
+<p>The manager picks a random station when one is used, it was possible for the manager to pick the station that was just used by the player.<br>
+It would be a bit too easy for the player to immediately know where the active healstation is, I added a "skip" boolean to all stations, which are set to true when the stations are activated.<br>
+When a station is used the skip boolean will stay on true until a new station is chosen, this will make sure that the last used station doesn't have a chance to reactivate immediately. </p>
+</div>
+
+</body>
+</html>
