@@ -8,7 +8,8 @@ body {
 	background-size: cover;
 	color: #ffffff;
 	text-align: center;
-	font-family: Arial, Sans-serif;
+	@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');
+	font-family: 'Oswald', sans-serif;
 }
 
 ul.topnav {	
@@ -25,7 +26,7 @@ ul.topnav li {
 	}
 
 ul.topnav li a {
-	transition: background-color 0.5s ease-in-out;
+	transition: background-color 0.2s ease-in-out;
     display: block;
     color: #ffffff;
     text-align: center;
