@@ -1,15 +1,26 @@
 body {  
 	margin: 0;
 	background-color: #040303;
-	background-image: url("../images/background.png");
+	background-image: url("../images/FroneBG2021DES.png");
 	background-position: center;
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-size: cover;
 	color: #ffffff;
 	text-align: center;
-	@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');
-	font-family: 'Oswald', sans-serif;
+	@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap");
+	font-family: Oswald, sans-serif;
+}
+
+body.frontpage {
+	background-image: url("../images/FroneBG2021.png");
+
+
+}
+
+div.emptydiv {
+	height: 100vh;
+	width: auto;
 }
 
 ul.topnav {	
@@ -39,8 +50,8 @@ ul.topnav li a:hover:not(.active) {
 	}
 
 ul.topnav li a.active {
-	background-color: #ffd400;
-	color: #000000;
+	background-color: #BF00CD;
+	color: #ffffff;
 	}
 
 div.contentleft {
@@ -56,7 +67,7 @@ div.contentleft {
 	text-align: left;
 	position: relative;  
 	width: 50%;
-	height: 300px;
+	height: auto;
 }
 
 
@@ -74,7 +85,7 @@ div.contentright {
 	text-align: right;
 	position: relative;  
 	width: 50%;
-	height: 300px;
+	height: auto;
 }
 
 div.contentlarge {
@@ -110,13 +121,17 @@ div.ScrollWindow {
 }
 
 img.imgleft {
-	height: 100%;
+	height: 25vh;
 	float:left;	
 }
 
 img.imgright {
-	height: 100%;
+	height: 25vh;
 	float:right;	
+}
+
+img.imgContact {
+	height: 5vh;
 }
 
 pre{
