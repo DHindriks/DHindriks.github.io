@@ -1,3 +1,5 @@
+/*TODO: Remove outdated classes*/
+
 body {  
 	margin: 0;
 	background-color: #040303;
@@ -18,18 +20,31 @@ body.frontpage {
 
 }
 
+html {
+	scroll-behavior: smooth;
+}
+
 div.emptydiv {
-	height: 100vh;
+	height: 50vh;
 	width: auto;
 }
 
 ul.topnav {	
     list-style-type: none;
 	text-align: center;
+	top: 0;
+	position: sticky;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: rgba(29, 29, 29, 0.7);
+	width: 100%;
+	z-index: 500;
+
+}
+
+video.PageVideo {
+	width: 100%;
 }
 
 ul.topnav li {
@@ -43,82 +58,91 @@ ul.topnav li a {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+	z-index: 10;
 }
 
 ul.topnav li a:hover:not(.active) {
-	background-color: #0e0e0e;
+	background-color: #BF00CD;
 	}
 
 ul.topnav li a.active {
 	background-color: #BF00CD;
 	color: #ffffff;
-	}
+}
 
-div.contentleft {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-right:0 auto;
-    margin-left:0 auto;
-	left: 25%;
-	float:center;
-	overflow:auto;
-	border: 16px solid #333;
-	background-color: #333;
+div.CodeWindow {
+text-align: left;
+width: 80%;
+}
+
+div.CodeWindowLB {
+	float: center;
+	height: 100%;
 	text-align: left;
-	position: relative;  
-	width: 50%;
-	height: auto;
+	overflow:  scroll;
+	width: 100%;
+	}
+p {
+	text-align: left;
 }
 
-
-
-div.contentright {
-	margin-top: 20px;
-    margin-bottom: 20px;
-    margin-right:0 auto;
-    margin-left:0 auto;
-	left: 25%;
-	float:center;
-	overflow:auto;
-	border: 16px solid #333;
-	background-color: #333;
-	text-align: right;
-	position: relative;  
-	width: 50%;
-	height: auto;
+div.WorksFlex {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
+
+div.ProjectDisplay {
+	width: 500px;
+	height: auto;
+	margin: 20px;
+	padding: 10px;
+	background-color: #16213E;
+}
+
+div.ProjectTitleContainer {
+	background-color: #0000007a;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	pointer-events: none;
+}
+
+.projectImgContainer {
+	width: 480px;
+	height: 400px;
+	margin: 10px;
+	overflow: hidden;
+	position: relative;
+}
+
+img.ProjectImg {
+	object-position: center;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform .4s ease-in-out;
+}
+
+img.ProjectImg:hover{ 
+	transform: scale(1.2);
+	cursor: pointer;
+}
+
 
 div.contentlarge {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-right:0 auto;
-    margin-left:0 auto;
-	left: 25%;
+
 	float:center;
-	overflow:auto;
-	border: 16px solid #333;
-	background-color: #333;
-	text-align: left;
-	position: relative;  
-	width: 50%;
+	overflow:hidden;
+	display: block;
+    background-color: #1d1d1d;
+	width: 100%;
+	padding: 30px;
 	height: auto;
 }
 
-div.ScrollWindow {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-right:0 auto;
-    margin-left:0 auto;
-	left: 25%;
-	float:center;
-	overflow:scroll;
-	border: 16px solid #1e1e1e;
-	background-color: #1e1e1e;
-	text-align: left;
-	position: relative;  
-	width: 50%;
-	height: 20px;
-}
 
 img.imgleft {
 	height: 25vh;
@@ -134,14 +158,16 @@ img.imgContact {
 	height: 5vh;
 }
 
-pre{
+pre.Preview{
 	height: 40pc;
 	background-color: #1e1e1e;
 	overflow: scroll;
 }
 
-pre:hover {
-	height: 50pc;
+pre.CodeLightBox{
+	height: 100%;
+	text-align: left;
+	overflow: scroll;
 }
 
 img.toplogo1 {
@@ -172,6 +198,16 @@ img.postpicture {
 
 img.postpicture:hover {
 	width: 90%;
+}
+
+a.previewLink {
+	text-decoration: none;
+	color: #ffffff;
+}
+
+a.previewLink :hover {
+	text-decoration: none;
+	color: #ffffff;
 }
 
 a:link, a:visited {

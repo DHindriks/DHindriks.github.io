@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Sector: Unknown </title>
+<link rel="icon" type="image/png" href="../images/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+<body>
+<ul class="topnav">
+	<li><a href="../index.html">Home</a></li>
+	<li><a href="../index.html#About">About</a></li>
+	<li><a href="../index.html#Projects">My projects</a></li>
+	<li><a href="../index.html#Contact">Contact</a></li>
+</ul>
+
+<div  class="emptydiv" id="Top"></div>
+
+<div class=contentlarge>
+	<h1>Sector: Unknown</h1>
+	<h4>a top down roguelike where the player explores derelict sectors in space that are filled with treasure, and danger. <br>
+	This game is still in development and is designed for mobile devices.
+	</h4>
+	<br>
+	<img src="../images/RSDungeon.PNG" width="75%" align="middle">
+	<br>
+	<h3>Current Features</h3>
+	<ul>
+		<li><p>Inventory & equipment system</p></li>
+		<li><p>procedural map & dungeon generator</p></li>
+	</ul>
+
+	<h3>Planned Features</h3>
+	<ul>
+		<li><p>Aiming system for ranged weapons.</p></li>
+		<li><p>Improving the dungeon generator to support different room sizes.</p></li>
+		<li><p>Hostile enemy AI.</p></li>
+	</ul>
+	
+</div>
+
+<div class="contentlarge" style="background-color: #16213E">
+	<h3>About the project</h3>
+	<p>In Sector: Unknown -also called Project Roguespace- the player explores procedurally generated sectors in space which are populated by abandoned structures, enemies and other points of interest.<br><br>
+		This is a solo project that started out as an uni assignment which had a focus on procedural generation. I continued working on the project after the assignment with the aim to release the game on Android devices.
+	</p>
+	<img src="../images/RSGameplay.PNG" width="75%" align="middle">
+	<br><br>
+	<h3 id="Block1">World generation code</h3>
+	<p> 
+		The world generator is fairly short, it uses an instance of the System.Random class to generate the world and to avoid other potential objects from interfering with the world generation process.
+	</p>
+	<p>
+		There are 3 lists in the world generator class that store the prefabs of the structures it spawns in the play area, these structures are devided into small, medium and large.<br>
+		The large structures will generally contain more resources but also more dangers for the player, large structers are also harder to reach because they spawn further away from the player's spawnpoint.
+	</p>
+
+	<p>
+		The spawning of structures is calculated using weights, each structure category has a weight associated with it that influence the chance of it being chosen by the world generator.<br>
+		The world generator uses 2 sets of weights, the first is associated with the player's spawnpoint and the other with the edge of the playable area. When the world generator picks coordinates to spawn a structure it will decide what the weights are for those coordinates by interpolating between the 2 weight sets. 
+	</p>
+
+	<div class=CodeWindow>
+		<a href="../samples/RSWorldGenerator.html" class="previewLink">
+			<div><p>World generator script(Click for full view)</p></div>
+		</a>
+		<pre class="Preview">
+		using System.Collections.Generic;
+		using UnityEngine;
+	
+		public class GenerateWorld : MonoBehaviour
+		{
+			[SerializeField]
+			bool AutoSeed; //if true, will generate a random seed on Start
+	
+			[SerializeField]
+			int MapSize;
+	
+			[SerializeField]
+			int LevelSeed; 
+	
+			[SerializeField]
+			List<GameObject> LargeStructures = new List<GameObject>();
+	
+			[SerializeField]
+			List<GameObject> MediumStructures = new List<GameObject>();
+	
+			[SerializeField]
+			List<GameObject> SmallStructures = new List<GameObject>();
+	
+			[SerializeField]
+			float[] StartWeights; //random weights at the center of the play area
+	
+			[SerializeField]
+			float[] EndWeights; //random weights at the end of the play area
+	
+			[SerializeField]
+			int overlapTestBoxSize;
+	
+			public System.Random Seed;
+	
+	
+			// Start is called before the first frame update, generates seed if none is given
+			void Start()
+			{
+				GameManager.instance.WorldGenerator = this;
+				if (AutoSeed)
+				{
+					LevelSeed = Random.Range(0, int.MaxValue);
+					Seed = new System.Random(LevelSeed);
+				}
+				else
+				{
+					Seed = new System.Random(LevelSeed);
+				}
+	
+				SpawnStructures(60);
+			}
+	
+			//picks the type(small, medium or large) the structure is going to be, based on distance from the player's spawn point(0, 0)
+			List<GameObject> PickStructureType(Vector3 Location)
+			{
+				float CurrentWeight = 0;
+				float[] Localweights = new float[StartWeights.Length]; 
+	
+				float RandomNbr = (float)Seed.NextDouble();
+	
+				for (int i = 0; i < StartWeights.Length; i++)
+				{
+					float LocalWeight = Mathf.Lerp(StartWeights[i], EndWeights[i], Vector3.Distance(Vector3.zero, Location) / Vector3.Distance(Vector3.zero, new Vector3(MapSize, 0, MapSize)));
+					Localweights[i] = LocalWeight;
+	
+					if (CurrentWeight + LocalWeight >= (RandomNbr))
+					{
+						switch (i)
+						{
+							case 0:
+								return SmallStructures;
+	
+							case 1:
+								return MediumStructures;
+	
+							case 2:
+								return LargeStructures;
+						}
+					}else
+					{
+						CurrentWeight += LocalWeight;
+					}
+				}
+	
+				Debug.LogError("Couldn't generate type");
+	
+				return null;
+			}
+	
+			void SpawnStructures(int amount)
+			{
+				for (int i = 0; i < amount; i++)
+				{
+	
+					Vector3 Pos = new Vector3(Seed.Next(-MapSize, MapSize), 0, Seed.Next(-MapSize, MapSize));
+					Quaternion Rot = Quaternion.Euler(0, Seed.Next(0, 361), 0);
+	
+					List<GameObject> PickedList = new List<GameObject>();
+	
+					PickedList = PickStructureType(Pos);
+	
+					//detects overlap
+					Vector3 overlapTestBoxScale = new Vector3(overlapTestBoxSize, overlapTestBoxSize, overlapTestBoxSize);
+					Collider[] collidersInsideOverlapBox = new Collider[1];
+					int numberOfCollidersFound = Physics.OverlapBoxNonAlloc(Pos, overlapTestBoxScale, collidersInsideOverlapBox, Rot);
+	
+					if (numberOfCollidersFound == 0)
+					{
+						GameObject Structure = Instantiate(PickedList[Seed.Next(0, PickedList.Count)]);
+						Structure.transform.position = Pos;
+						Structure.transform.rotation = Rot;
+					}
+					else
+					{
+						Debug.Log("collider found, skipping structure.");
+					}
+	
+				}
+			}
+	
+		}
+		
+		</pre>
+	</div>
+	
+<h3 id="Block2">Dungeon generation code</h3>
+<video autoplay muted loop class="PageVideo">
+	<source src="../Video/RSDungeonGen.mp4">
+</video>
+<p>The dungeon generator is mostly done by 2 scripts: DungeonGenerator and RoomSpawnPoint, the Dungeongenerator stores variables like room prefabs, interior prefabs and the current amount of rooms in the dungeon, it also starts the generation process by generating the first room.<br>
+	Each room that can generate has at at least a doorway on the front side and doorways on other sides depending on the room. when the first room is spawned by the DungeonGenerator, the Roomspawnpoint script in each doorway of that room will spawn a room that connects to it. Each room that is spawned will generate connecting rooms until there is no space for more rooms or until the generator has reached the target amount of rooms.<br><br>
+	After reaching the target amount of rooms, the only new rooms that are spawned will be dead ends to close te dungeon, then the dungeon generator will loop through all rooms and populate them with exit points, enemies, loot and decorations.
+
+</p>
+<h4>DungeonGenerator script<h4>
+	<div class=CodeWindow>
+		<pre>
+	</pre>
+	</div>
+
+	<div class=CodeWindow>
+		<div><p>Dungeon Generator script(Click for full view)</p></div>
+		<a href="../samples/RSDungeongenerator.html" class="previewLink">
+			<pre class="Preview">
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DungeonGenerator : MonoBehaviour
+{
+public List<GameObject> Tiles;
+[Space(20)]
+
+public List<GameObject> StartTiles; //the first tiles aren't connected to anything, so they will have room spawn points on all (possible) sides.
+[Space(15)]
+public GameObject Deadend; //the dead end is a one-way room, used randomly in the dungeon and to close it off when its max rooms is reached.
+public GameObject HardWall; //the hardwall is only a wall, used to close rooms off when there is no space for a full room next to it.
+public GameObject ExitInterior; //special interior, the places where the player enters/exits the dungeons.
+[Space(20)]
+public int MinLength;
+public int MaxLength;
+[Space(20)]
+[SerializeField]
+Material FloorMatBase;
+[SerializeField]
+Material WallMatBase;
+
+[SerializeField]
+List<Color> DungeonColors;
+
+public List<GameObject> CurrentDungeonTiles;
+public List<GameObject> CurrentDungeonDeadEnds;
+
+[HideInInspector]
+public int PickedLength;
+[HideInInspector]
+public int CurrentLength;
+[HideInInspector]
+public DungeonData Data;
+[HideInInspector]
+public System.Random seed;
+
+[ContextMenu("Reset Dungeon")]
+void ResetDungeon()
+{
+	foreach(Transform tr in transform)
+	{
+		Destroy(tr.gameObject);
+	}
+	Data.GeneratedDoors.Clear();
+	CurrentLength = 0;
+	Awake();
+}
+
+void Awake()
+{
+	//TODO: link to world generator, dungeons should be tied to seed
+	PickedLength = Random.Range(MinLength, MaxLength + 1);
+
+	seed = GameManager.instance.WorldGenerator.Seed;
+
+	Data = GetComponentInParent<DungeonData>();
+	Color ColorTop = DungeonColors[seed.Next(0, DungeonColors.Count)];
+	Color ColorBot = ColorTop * 0.05f;
+
+	Data.WallMat = Instantiate(WallMatBase);
+	Data.WallMat.SetColor("BottomColor", ColorBot);
+	Data.WallMat.SetColor("TopColor", ColorTop);
+
+	Data.FloorMat = Instantiate(FloorMatBase);
+	Data.FloorMat.SetColor("BottomColor", ColorTop);
+	Data.FloorMat.SetColor("TopColor", ColorBot);
+
+	Data.Init();
+
+	GameObject FirstTile = Instantiate(StartTiles[seed.Next(0, StartTiles.Count)], transform);
+	CurrentDungeonTiles.Add(FirstTile);
+	FirstTile.name += "(Origin)";
+}
+
+//rooms that spawn at or above the maxrooms count will call this 
+public void CheckRoomCount()
+{
+	CancelInvoke("PopulateDungeon");
+	Invoke("PopulateDungeon", 1);
+}
+
+
+void PopulateDungeon()
+{
+	int ExitsNeeded = Data.exits.Count;
+	int CurrentExits = 0;
+
+	//generates all possible exits in dead end rooms
+	for(int i = 0; i <= ExitsNeeded - CurrentExits; i++)
+	{
+		if (CurrentExits >= ExitsNeeded || CurrentDungeonDeadEnds.Count == 0)
+		{
+			break;
+		}
+		int SelectedDeadEnd = Random.Range(0, CurrentDungeonDeadEnds.Count);
+		CurrentDungeonDeadEnds[SelectedDeadEnd].GetComponent<DungeonDeadEndInteriorSpawner>().SpawnInterior(ExitInterior);
+		CurrentDungeonDeadEnds.RemoveAt(SelectedDeadEnd);
+
+		CurrentExits++;
+	}
+
+	//generates remaining exits in normal rooms
+	if (CurrentExits < ExitsNeeded)
+	{
+		for (int i = 0; i <= ExitsNeeded - CurrentExits; i++)
+		{
+			if (CurrentExits >= ExitsNeeded || CurrentDungeonTiles.Count == 0)
+			{
+				break;
+			}
+			int SelectedRoom = Random.Range(0, CurrentDungeonTiles.Count);
+			CurrentDungeonTiles[SelectedRoom].GetComponent<RoomSpawnPoint>().SpawnInterior(ExitInterior);
+			CurrentDungeonTiles.RemoveAt(SelectedRoom);
+
+			CurrentExits++;
+		}
+	}
+
+	foreach (GameObject room in CurrentDungeonDeadEnds)
+	{
+		if (room.GetComponent<DungeonDeadEndInteriorSpawner>())
+		{
+			room.GetComponent<DungeonDeadEndInteriorSpawner>().SpawnInterior();
+		}
+		else
+		{
+			Debug.LogWarning("Spawned DeadEnd " + room.name + " does not contain DungeonDeadEndInteriorSpawner class, is this intentional?");
+		}
+	}
+
+	foreach (GameObject room in CurrentDungeonTiles)
+	{
+		if(room.GetComponent<RoomSpawnPoint>())
+		{
+			room.GetComponent<RoomSpawnPoint>().SpawnInterior();
+		}
+		else
+		{
+			Debug.LogWarning("Spawned room " + room.name + " does not contain RoomSpawnPoint class, is this intentional?");
+		}
+	}
+
+}
+
+}		
+			</pre>
+		</a>
+	</div>
+
+
+	<div class=CodeWindow>
+		<div><p>Room Generator script(Click for full view)</p></div>
+		<a href="../samples/RSRoomGenerator.html" class="previewLink">
+			<pre class="Preview">
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class RoomSpawnPoint : MonoBehaviour
+{
+	DungeonGenerator Generator;
+
+	List<Transform> SpawnPoints = new List<Transform>();
+	[Space(40)]
+	public List<GameObject> Interiors; //possible interiors the rooms can contain
+
+	void Awake()
+	{
+		Generator = GetComponentInParent<DungeonGenerator>();
+		foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())
+		{
+			if (renderer.gameObject.tag == "Floor")
+			{
+				renderer.material = Generator.Data.FloorMat;
+			}else
+			{
+				renderer.material = Generator.Data.WallMat;
+			}
+		}
+		Invoke("SpawnTile", Random.Range(0.1f, 0.4f));
+	}
+
+	void SpawnTile()
+	{
+		for (int i = 0; i < transform.GetChild(0).transform.childCount; i++)
+		{
+			SpawnPoints.Add(transform.GetChild(0).GetChild(i));
+
+			Transform CurrentSpawnPoint = transform.GetChild(0).GetChild(i);
+
+
+			//detects overlap
+			Vector3 overlapTestBoxScale = new Vector3(20, 10, 20);
+			Collider[] collidersInsideOverlapBox = new Collider[1];
+			int numberOfCollidersFound = Physics.OverlapBoxNonAlloc(CurrentSpawnPoint.position, overlapTestBoxScale, collidersInsideOverlapBox);
+
+
+			if (numberOfCollidersFound != 0 && collidersInsideOverlapBox[0].transform.root != transform.root) //if overlap, spawn hardwall.
+			{
+				GameObject NewTile = Instantiate(Generator.HardWall, transform.parent);
+
+				NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
+				NewTile.transform.LookAt(transform, Vector3.up);
+			}else if (Generator.CurrentLength <= Generator.PickedLength && numberOfCollidersFound == 0) //if more tiles need to be spawned, no overlap.
+			{
+				//calculate if next room will be a dead end, based on amount of connecting points(max 75% chance min 0% chance)
+				float Randomnmbr = Random.Range(0f, 1f);
+				float Chance = 1f / (transform.GetChild(0).childCount - i);
+				//spawn random dead end.
+				if (Randomnmbr > Chance)
+				{
+					GameObject NewTile = Instantiate(Generator.Deadend, transform.parent);
+					NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
+					NewTile.transform.LookAt(transform, Vector3.up);
+					Generator.CurrentLength++;
+					Generator.CurrentDungeonDeadEnds.Add(NewTile);
+				}
+				else //spawn normal 
+				{
+					GameObject NewTile = Instantiate(Generator.Tiles[Random.Range(0, Generator.Tiles.Count)], transform.parent);
+					NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
+					NewTile.transform.LookAt(transform, Vector3.up);
+					Generator.CurrentLength++;
+					Generator.CurrentDungeonTiles.Add(NewTile);
+				}
+
+			}
+			else if (numberOfCollidersFound == 0) //no overlap and no more tiles to be spawned.
+			{
+				GameObject NewTile = Instantiate(Generator.Deadend, transform.parent);
+
+				NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
+				NewTile.transform.LookAt(transform, Vector3.up);
+				Generator.CurrentLength++;
+				Generator.CurrentDungeonDeadEnds.Add(NewTile);
+			}
+
+		}
+		Generator.CheckRoomCount();
+	}
+
+	public void SpawnInterior(GameObject custom = null)
+	{
+		if (Interiors.Count > 0 || custom != null)
+		{
+			if (custom == null)
+			{
+				custom = Interiors[Random.Range(0, Interiors.Count)];
+			}
+
+			GameObject Interior = Instantiate(custom, transform);
+			Interior.transform.position = transform.position;
+			Interior.transform.rotation = transform.rotation;
+		}
+	}
+
+}
+			</pre>
+		</a>
+	</div>
+
+</div>
+</div>
+
+</body>
+</html>
