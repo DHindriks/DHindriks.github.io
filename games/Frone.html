@@ -25,567 +25,92 @@
 	<br>
 	<h3>Current Features</h3>
 	<ul>
-		<li><p>Inventory & equipment system</p></li>
-		<li><p>procedural map & dungeon generator</p></li>
-	</ul>
-
-	<h3>Planned Features</h3>
-	<ul>
-		<li><p>Aiming system for ranged weapons.</p></li>
-		<li><p>Improving the dungeon generator to support different room sizes.</p></li>
-		<li><p>Hostile enemy AI.</p></li>
+		<li><p>Hovercraft selection and customisation</p></li>
+		<li><p>Endless road generator</p></li>
+		<li><p>procedurally generated missions</p></li>
+		<li><p>Item collection & inventory</p></li>
+		<li><p>data saving and loading</p></li>
+		<li><p>Faction reputation & shop system</p></li>
 	</ul>
 	
 </div>
 
 <div class="contentlarge" style="background-color: #16213E">
 	<h3>About the project</h3>
-	<p>Frone started out as a school project at my study at Alfa-College, after the project was done I continued working on the game with the goal of learning more about features that would usually not be made in school projects due to time constraints.<br><br>
+	<p>Frone started out as a project at my study at Alfa-College, after the project was done I continued working on the game with the goal of learning more about features that would usually not be made in school projects due to time constraints.<br><br>
 	The game itself is an endless runner set on a futuristic version of earth that was invaded by aliens. The remnants of humanity are hiding in small communities and using small remote controlled hovercrafts to communicate, scavenge and fight the aliens.<br><br>
 	This project has become the testing ground of different features that I created to improve my programming and learn more about the Unity engine.
 	</p>
-	<img src="../images/RSGameplay.PNG" width="75%" align="middle">
+	<img src="../images/FroneFlip.png" width="75%" align="middle">
 	<br><br>
-<h3 id="Block1">Player customization</h3>
-<p></p>
-	<a href="#Window1">
-		<div class=CodeWindow>
-			<div><p></p></div>
-			<pre class="Preview">
-	using System.Collections.Generic;
-	using UnityEngine;
 
-	public class GenerateWorld : MonoBehaviour
-	{
-		[SerializeField]
-		bool AutoSeed; //if true, will generate a random seed on Start
-
-		[SerializeField]
-		int MapSize;
-
-		[SerializeField]
-		int LevelSeed; 
-
-		[SerializeField]
-		List<GameObject> LargeStructures = new List<GameObject>();
-
-		[SerializeField]
-		List<GameObject> MediumStructures = new List<GameObject>();
-
-		[SerializeField]
-		List<GameObject> SmallStructures = new List<GameObject>();
-
-		[SerializeField]
-		float[] StartWeights;
-
-		[SerializeField]
-		float[] EndWeights;
-
-		[SerializeField]
-		int overlapTestBoxSize;
-
-		public System.Random Seed;
-
-
-		// Start is called before the first frame update, generates seed if none is given
-		void Start()
-		{
-			GameManager.instance.WorldGenerator = this;
-			if (AutoSeed)
-			{
-				LevelSeed = Random.Range(0, int.MaxValue);
-				Seed = new System.Random(LevelSeed);
-			}
-			else
-			{
-				Seed = new System.Random(LevelSeed);
-			}
-
-			SpawnStructures(60);
-		}
-
-		//picks the type(small, medium or large) the structure is going to be, based on distance from the player's spawn point(0, 0)
-		List<GameObject> PickStructureType(Vector3 Location)
-		{
-			float CurrentWeight = 0;
-			float[] Localweights = new float[StartWeights.Length]; 
-
-			float RandomNbr = (float)Seed.NextDouble();
-
-			for (int i = 0; i < StartWeights.Length; i++)
-			{
-				float LocalWeight = Mathf.Lerp(StartWeights[i], EndWeights[i], Vector3.Distance(Vector3.zero, Location) / Vector3.Distance(Vector3.zero, new Vector3(MapSize, 0, MapSize)));
-				Localweights[i] = LocalWeight;
-
-				if (CurrentWeight + LocalWeight >= (RandomNbr))
-				{
-					switch (i)
-					{
-						case 0:
-							return SmallStructures;
-
-						case 1:
-							return MediumStructures;
-
-						case 2:
-							return LargeStructures;
-					}
-				}else
-				{
-					CurrentWeight += LocalWeight;
-				}
-			}
-
-			Debug.LogError("Couldn't generate type");
-
-			return null;
-		}
-
-		void SpawnStructures(int amount)
-		{
-			for (int i = 0; i < amount; i++)
-			{
-
-				Vector3 Pos = new Vector3(Seed.Next(-MapSize, MapSize), 0, Seed.Next(-MapSize, MapSize));
-				Quaternion Rot = Quaternion.Euler(0, Seed.Next(0, 361), 0);
-
-				List<GameObject> PickedList = new List<GameObject>();
-
-				PickedList = PickStructureType(Pos);
-
-				//detects overlap
-				Vector3 overlapTestBoxScale = new Vector3(overlapTestBoxSize, overlapTestBoxSize, overlapTestBoxSize);
-				Collider[] collidersInsideOverlapBox = new Collider[1];
-				int numberOfCollidersFound = Physics.OverlapBoxNonAlloc(Pos, overlapTestBoxScale, collidersInsideOverlapBox, Rot);
-
-				if (numberOfCollidersFound == 0)
-				{
-					GameObject Structure = Instantiate(PickedList[Seed.Next(0, PickedList.Count)]);
-					Structure.transform.position = Pos;
-					Structure.transform.rotation = Rot;
-				}
-				else
-				{
-					Debug.Log("collider found, skipping structure.");
-				}
-
-			}
-		}
-
-	}
-					
-			</pre>
-		</div>
-	</a>
-
-	<div class="LightBox" id="Window1"> 
-		<ul class="topnav">
-			<li><a href="#Block1">Close</a></li>
-		</ul>
-		
-			<pre class="CodeLightBox">
-	using System.Collections.Generic;
-	using UnityEngine;
-
-	public class GenerateWorld : MonoBehaviour
-	{
-		[SerializeField]
-		bool AutoSeed; //if true, will generate a random seed on Start
-
-		[SerializeField]
-		int MapSize;
-
-		[SerializeField]
-		int LevelSeed; 
-
-		[SerializeField]
-		List<GameObject> LargeStructures = new List<GameObject>();
-
-		[SerializeField]
-		List<GameObject> MediumStructures = new List<GameObject>();
-
-		[SerializeField]
-		List<GameObject> SmallStructures = new List<GameObject>();
-
-		[SerializeField]
-		float[] StartWeights;
-
-		[SerializeField]
-		float[] EndWeights;
-
-		[SerializeField]
-		int overlapTestBoxSize;
-
-		public System.Random Seed;
-
-
-		// Start is called before the first frame update, generates seed if none is given
-		void Start()
-		{
-			GameManager.instance.WorldGenerator = this;
-			if (AutoSeed)
-			{
-				LevelSeed = Random.Range(0, int.MaxValue);
-				Seed = new System.Random(LevelSeed);
-			}
-			else
-			{
-				Seed = new System.Random(LevelSeed);
-			}
-
-			SpawnStructures(60);
-		}
-
-		//picks the type(small, medium or large) the structure is going to be, based on distance from the player's spawn point(0, 0)
-		List<GameObject> PickStructureType(Vector3 Location)
-		{
-			float CurrentWeight = 0;
-			float[] Localweights = new float[StartWeights.Length]; 
-
-			float RandomNbr = (float)Seed.NextDouble();
-
-			for (int i = 0; i < StartWeights.Length; i++)
-			{
-				float LocalWeight = Mathf.Lerp(StartWeights[i], EndWeights[i], Vector3.Distance(Vector3.zero, Location) / Vector3.Distance(Vector3.zero, new Vector3(MapSize, 0, MapSize)));
-				Localweights[i] = LocalWeight;
-
-				if (CurrentWeight + LocalWeight >= (RandomNbr))
-				{
-					switch (i)
-					{
-						case 0:
-							return SmallStructures;
-
-						case 1:
-							return MediumStructures;
-
-						case 2:
-							return LargeStructures;
-					}
-				}else
-				{
-					CurrentWeight += LocalWeight;
-				}
-			}
-
-			Debug.LogError("Couldn't generate type");
-
-			return null;
-		}
-
-		void SpawnStructures(int amount)
-		{
-			for (int i = 0; i < amount; i++)
-			{
-
-				Vector3 Pos = new Vector3(Seed.Next(-MapSize, MapSize), 0, Seed.Next(-MapSize, MapSize));
-				Quaternion Rot = Quaternion.Euler(0, Seed.Next(0, 361), 0);
-
-				List<GameObject> PickedList = new List<GameObject>();
-
-				PickedList = PickStructureType(Pos);
-
-				//detects overlap
-				Vector3 overlapTestBoxScale = new Vector3(overlapTestBoxSize, overlapTestBoxSize, overlapTestBoxSize);
-				Collider[] collidersInsideOverlapBox = new Collider[1];
-				int numberOfCollidersFound = Physics.OverlapBoxNonAlloc(Pos, overlapTestBoxScale, collidersInsideOverlapBox, Rot);
-
-				if (numberOfCollidersFound == 0)
-				{
-					GameObject Structure = Instantiate(PickedList[Seed.Next(0, PickedList.Count)]);
-					Structure.transform.position = Pos;
-					Structure.transform.rotation = Rot;
-				}
-				else
-				{
-					Debug.Log("collider found, skipping structure.");
-				}
-
-			}
-		}
-
-	}
-					
-			</pre>
-	</div>
-	
-<h3>Dungeon generation code</h3>
-<video autoplay muted loop class="PageVideo">
-	<source src="../Video/RSDungeonGen.mp4">
-</video>
-<p>The dungeon generator is mostly done by 2 scripts: DungeonGenerator and RoomSpawnPoint, the Dungeongenerator stores variables like room prefabs, interior prefabs and the current amount of rooms in the dungeon, it also starts the generation process by generating the first room.<br>
-	Each room that can generate has at at least a doorway on the front side and doorways on other sides depending on the room. when the first room is spawned by the DungeonGenerator, the Roomspawnpoint script in each doorway of that room will spawn a room that connects to it. Each room that is spawned will generate connecting rooms until there is no space for more rooms or until the generator has reached the target amount of rooms.<br><br>
-	After reaching the target amount of rooms, the only new rooms that are spawned will be dead ends to close te dungeon, then the dungeon generator will loop through all rooms and populate them with exit points, enemies, loot and decorations.
-
+<h3>Player customization</h3>
+<p>In the game, the player can collect and play as different hovercrafts, each hovercraft has an ability that can help it survive as well as colors that can be customised by the player.<br>
+Colors are seperated into 4 categories: primary, secondary, accents and energy. Each of these colors can be chosen by the player to create different combinations.</p>
+<img src="../images/FroneCustomize.png" width="75%" align="middle">
+<img src="../images/FroneCustomize2.png" width="75%" align="middle">
+<p>
+The colors are tracked in the drone settings class, each hovercraft has a settings class attached to it that stores the colors, animations and wether the hovercraft has been unlocked by the player.<br>
+This class also has the function that applies the stored colors to the hovercraft, so the color picker will change the color variable and then call this function:
 </p>
-<h4>DungeonGenerator script<h4>
-	<div class=CodeWindow>
-		<pre>
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	
-	public class DungeonGenerator : MonoBehaviour
-	{
-		public List<GameObject> Tiles;
-		[Space(20)]
-	
-		public List<GameObject> StartTiles; //the first tiles aren't connected to anything, so they will have room spawn points on all (possible) sides.
-		[Space(15)]
-		public GameObject Deadend; //the dead end is a one-way room, used randomly in the dungeon and to close it off when its max rooms is reached.
-		public GameObject HardWall; //the hardwall is only a wall, used to close rooms off when there is no space for a full room next to it.
-		public GameObject ExitInterior; //special interior, the places where the player enters/exits the dungeons.
-		[Space(20)]
-		public int MinLength;
-		public int MaxLength;
-		[Space(20)]
-		[SerializeField]
-		Material FloorMatBase;
-		[SerializeField]
-		Material WallMatBase;
-	
-		[SerializeField]
-		List<Color> DungeonColors;
-	
-		public List<GameObject> CurrentDungeonTiles;
-		public List<GameObject> CurrentDungeonDeadEnds;
-	
-		[HideInInspector]
-		public int PickedLength;
-		[HideInInspector]
-		public int CurrentLength;
-		[HideInInspector]
-		public DungeonData Data;
-		[HideInInspector]
-		public System.Random seed;
-	
-		[ContextMenu("Reset Dungeon")]
-		void ResetDungeon()
-		{
-			foreach(Transform tr in transform)
-			{
-				Destroy(tr.gameObject);
-			}
-			Data.GeneratedDoors.Clear();
-			CurrentLength = 0;
-			Awake();
-		}
-	
-		void Awake()
-		{
-			//TODO: link to world generator, dungeons should be tied to seed
-			PickedLength = Random.Range(MinLength, MaxLength + 1);
-	
-			seed = GameManager.instance.WorldGenerator.Seed;
-	
-			Data = GetComponentInParent<DungeonData>();
-			Color ColorTop = DungeonColors[seed.Next(0, DungeonColors.Count)];
-			Color ColorBot = ColorTop * 0.05f;
-	
-			Data.WallMat = Instantiate(WallMatBase);
-			Data.WallMat.SetColor("BottomColor", ColorBot);
-			Data.WallMat.SetColor("TopColor", ColorTop);
-	
-			Data.FloorMat = Instantiate(FloorMatBase);
-			Data.FloorMat.SetColor("BottomColor", ColorTop);
-			Data.FloorMat.SetColor("TopColor", ColorBot);
-	
-			Data.Init();
-	
-			GameObject FirstTile = Instantiate(StartTiles[seed.Next(0, StartTiles.Count)], transform);
-			CurrentDungeonTiles.Add(FirstTile);
-			FirstTile.name += "(Origin)";
-		}
-	
-		//rooms that spawn at or above the maxrooms count will call this 
-		public void CheckRoomCount()
-		{
-			CancelInvoke("PopulateDungeon");
-			Invoke("PopulateDungeon", 1);
-		}
-	
-	
-		void PopulateDungeon()
-		{
-			int ExitsNeeded = Data.exits.Count;
-			int CurrentExits = 0;
-	
-			//generates all possible exits in dead end rooms
-			for(int i = 0; i <= ExitsNeeded - CurrentExits; i++)
-			{
-				if (CurrentExits >= ExitsNeeded || CurrentDungeonDeadEnds.Count == 0)
-				{
-					break;
-				}
-				int SelectedDeadEnd = Random.Range(0, CurrentDungeonDeadEnds.Count);
-				CurrentDungeonDeadEnds[SelectedDeadEnd].GetComponent<DungeonDeadEndInteriorSpawner>().SpawnInterior(ExitInterior);
-				CurrentDungeonDeadEnds.RemoveAt(SelectedDeadEnd);
-	
-				CurrentExits++;
-			}
-	
-			//generates remaining exits in normal rooms
-			if (CurrentExits < ExitsNeeded)
-			{
-				for (int i = 0; i <= ExitsNeeded - CurrentExits; i++)
-				{
-					if (CurrentExits >= ExitsNeeded || CurrentDungeonTiles.Count == 0)
-					{
-						break;
-					}
-					int SelectedRoom = Random.Range(0, CurrentDungeonTiles.Count);
-					CurrentDungeonTiles[SelectedRoom].GetComponent<RoomSpawnPoint>().SpawnInterior(ExitInterior);
-					CurrentDungeonTiles.RemoveAt(SelectedRoom);
-	
-					CurrentExits++;
-				}
-			}
-	
-			foreach (GameObject room in CurrentDungeonDeadEnds)
-			{
-				if (room.GetComponent<DungeonDeadEndInteriorSpawner>())
-				{
-					room.GetComponent<DungeonDeadEndInteriorSpawner>().SpawnInterior();
-				}
-				else
-				{
-					Debug.LogWarning("Spawned DeadEnd " + room.name + " does not contain DungeonDeadEndInteriorSpawner class, is this intentional?");
-				}
-			}
-	
-			foreach (GameObject room in CurrentDungeonTiles)
-			{
-				if(room.GetComponent<RoomSpawnPoint>())
-				{
-					room.GetComponent<RoomSpawnPoint>().SpawnInterior();
-				}
-				else
-				{
-					Debug.LogWarning("Spawned room " + room.name + " does not contain RoomSpawnPoint class, is this intentional?");
-				}
-			}
-	
-		}
-	
-	}
-			
-				
-		</pre>
-	</div>
-
-	<h4>RoomSpawnPoint script<h4>
-		<div class=CodeWindow>
-			<pre>
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class RoomSpawnPoint : MonoBehaviour
+<div class=CodeWindow>
+			<pre class="Preview">
+public void SetColors(GameObject ParentObj)
 {
-	DungeonGenerator Generator;
-
-	List<Transform> SpawnPoints = new List<Transform>();
-	[Space(40)]
-	public List<GameObject> Interiors; //possible interiors the rooms can contain
-
-	void Awake()
+	Transform[] AllChildren = ParentObj.GetComponentsInChildren<Transform>(); //Gets all objects in the hovercraft object
+	foreach (Transform child in AllChildren)
 	{
-		Generator = GetComponentInParent<DungeonGenerator>();
-		foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())
+		if (child.GetComponent<Renderer>() != null)
 		{
-			if (renderer.gameObject.tag == "Floor")
+			Material RenderedMat = child.GetComponent<Renderer>().material;
+			switch (RenderedMat.name.Replace(" (Instance)", "")) //sets the right colors based on material name, other materials are ignored
 			{
-				renderer.material = Generator.Data.FloorMat;
-			}else
-			{
-				renderer.material = Generator.Data.WallMat;
+				case "DronePrimary":
+					RenderedMat.SetColor("_Color", PrimaryColor);
+					RenderedMat.SetColor("_EmissionColor", PrimaryColor);
+					break;
+
+				case "DroneSecondary":
+					RenderedMat.SetColor("_Color", SecondaryColor);
+					RenderedMat.SetColor("_EmissionColor", SecondaryColor);
+					break;
+
+				case "DroneDetails":
+					RenderedMat.SetColor("_Color", DetailsColor);
+					RenderedMat.SetColor("_EmissionColor", DetailsColor);
+					break;
+
+				case "DroneEnergy":
+					RenderedMat.SetColor("_Color", EnergyColor);
+					RenderedMat.SetColor("_EmissionColor", EnergyColor);
+					break;
 			}
-		}
-		Invoke("SpawnTile", Random.Range(0.1f, 0.4f));
-	}
 
-	void SpawnTile()
-	{
-		for (int i = 0; i < transform.GetChild(0).transform.childCount; i++)
-		{
-			SpawnPoints.Add(transform.GetChild(0).GetChild(i));
-
-			Transform CurrentSpawnPoint = transform.GetChild(0).GetChild(i);
-
-
-			//detects overlap
-			Vector3 overlapTestBoxScale = new Vector3(20, 10, 20);
-			Collider[] collidersInsideOverlapBox = new Collider[1];
-			int numberOfCollidersFound = Physics.OverlapBoxNonAlloc(CurrentSpawnPoint.position, overlapTestBoxScale, collidersInsideOverlapBox);
-
-
-			if (numberOfCollidersFound != 0 && collidersInsideOverlapBox[0].transform.root != transform.root) //if overlap, spawn hardwall.
+			if (child.GetComponent<TrailRenderer>() != null) //if object has a TrailRenderer, change those colors too
 			{
-				GameObject NewTile = Instantiate(Generator.HardWall, transform.parent);
-
-				NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
-				NewTile.transform.LookAt(transform, Vector3.up);
-			}else if (Generator.CurrentLength <= Generator.PickedLength && numberOfCollidersFound == 0) //if more tiles need to be spawned, no overlap.
-			{
-				//calculate if next room will be a dead end, based on amount of connecting points(max 75% chance min 0% chance)
-				float Randomnmbr = Random.Range(0f, 1f);
-				float Chance = 1f / (transform.GetChild(0).childCount - i);
-				//spawn random dead end.
-				if (Randomnmbr > Chance)
+				foreach (Material mat in child.GetComponent<TrailRenderer>().materials)
 				{
-					GameObject NewTile = Instantiate(Generator.Deadend, transform.parent);
-					NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
-					NewTile.transform.LookAt(transform, Vector3.up);
-					Generator.CurrentLength++;
-					Generator.CurrentDungeonDeadEnds.Add(NewTile);
+					mat.SetColor("_Color", EnergyColor);
+					mat.SetColor("_EmissionColor", EnergyColor);
 				}
-				else //spawn normal 
-				{
-					GameObject NewTile = Instantiate(Generator.Tiles[Random.Range(0, Generator.Tiles.Count)], transform.parent);
-					NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
-					NewTile.transform.LookAt(transform, Vector3.up);
-					Generator.CurrentLength++;
-					Generator.CurrentDungeonTiles.Add(NewTile);
-				}
-
 			}
-			else if (numberOfCollidersFound == 0) //no overlap and no more tiles to be spawned.
+
+			SetParticleColors(DroneParticles); 
+			SetParticleColors(BoostParticles); //Also set colors for particle effects
+			if (!name.Contains("Frone_Dropship")) // also set these colors in the gamemanager so other scripts could easily access them, the script does not do this for dropship customisation, which uses the same system.
 			{
-				GameObject NewTile = Instantiate(Generator.Deadend, transform.parent);
-
-				NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
-				NewTile.transform.LookAt(transform, Vector3.up);
-				Generator.CurrentLength++;
-				Generator.CurrentDungeonDeadEnds.Add(NewTile);
+				GameManager.Instance.CurrentPrimary = PrimaryColor;
+				GameManager.Instance.CurrentSecondary = SecondaryColor;
+				GameManager.Instance.CurrentDetails = DetailsColor;
+				GameManager.Instance.CurrentEnergy = EnergyColor;
 			}
-
-		}
-		Generator.CheckRoomCount();
-	}
-
-	public void SpawnInterior(GameObject custom = null)
-	{
-		if (Interiors.Count > 0 || custom != null)
-		{
-			if (custom == null)
-			{
-				custom = Interiors[Random.Range(0, Interiors.Count)];
-			}
-
-			GameObject Interior = Instantiate(custom, transform);
-			Interior.transform.position = transform.position;
-			Interior.transform.rotation = transform.rotation;
 		}
 	}
-
 }
-				
-				
-					
 			</pre>
 		</div>
 
-</div>
+
 </div>
 
 </body>
