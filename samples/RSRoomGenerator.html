@@ -9,7 +9,7 @@
 <body>
 
 <ul class="topnav">
-	<li><a href="../games/SectorUnknown.html#Block1">Close</a></li>
+	<li><a href="../games/SectorUnknown.html#Block2">Close</a></li>
 </ul>
 
 <pre class="CodeLightBox">
@@ -21,14 +21,14 @@
 	{
 		DungeonGenerator Generator;
 	
-		List<Transform> SpawnPoints = new List<Transform>();
+		List&lt;Transform&gt; SpawnPoints = new List&lt;Transform&gt;();
 		[Space(40)]
-		public List<GameObject> Interiors; //possible interiors the rooms can contain
+		public List&lt;GameObject&gt; Interiors; //possible interiors the rooms can contain
 	
 		void Awake()
 		{
-			Generator = GetComponentInParent<DungeonGenerator>();
-			foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())
+			Generator = GetComponentInParent&lt;DungeonGenerator&gt;();
+			foreach (MeshRenderer renderer in GetComponentsInChildren&lt;MeshRenderer&gt;())
 			{
 				if (renderer.gameObject.tag == "Floor")
 				{
@@ -43,7 +43,7 @@
 	
 		void SpawnTile()
 		{
-			for (int i = 0; i < transform.GetChild(0).transform.childCount; i++)
+			for (int i = 0; i &lt; transform.GetChild(0).transform.childCount; i++)
 			{
 				SpawnPoints.Add(transform.GetChild(0).GetChild(i));
 	
@@ -62,13 +62,13 @@
 	
 					NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
 					NewTile.transform.LookAt(transform, Vector3.up);
-				}else if (Generator.CurrentLength <= Generator.PickedLength && numberOfCollidersFound == 0) //if more tiles need to be spawned, no overlap.
+				}else if (Generator.CurrentLength &lt;= Generator.PickedLength && numberOfCollidersFound == 0) //if more tiles need to be spawned, no overlap.
 				{
 					//calculate if next room will be a dead end, based on amount of connecting points(max 75% chance min 0% chance)
 					float Randomnmbr = Random.Range(0f, 1f);
 					float Chance = 1f / (transform.GetChild(0).childCount - i);
 					//spawn random dead end.
-					if (Randomnmbr > Chance)
+					if (Randomnmbr &gt; Chance)
 					{
 						GameObject NewTile = Instantiate(Generator.Deadend, transform.parent);
 						NewTile.transform.position = transform.GetChild(0).GetChild(i).position;
@@ -102,7 +102,7 @@
 	
 		public void SpawnInterior(GameObject custom = null)
 		{
-			if (Interiors.Count > 0 || custom != null)
+			if (Interiors.Count &gt; 0 || custom != null)
 			{
 				if (custom == null)
 				{

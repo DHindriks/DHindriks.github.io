@@ -80,7 +80,7 @@ public class Enemy : MonoBehaviour {
 	[SerializeField]
 	GameObject DeathParticle;
 	[SerializeField]
-	List<GameObject> EnergyColors;
+	List&lt;GameObject&gt; EnergyColors;
 
 	Vector3 headingPos;
 
@@ -104,7 +104,7 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Awake() {
 		State = States.Patrol;
-		rb = GetComponent<Rigidbody>();
+		rb = GetComponent&lt;Rigidbody&gt;();
 		speed = Random.Range(750, 1500);
 		health = Random.Range(75, 150);
 		stoppingDistance = Random.Range(8, 16);
@@ -143,7 +143,7 @@ public class Enemy : MonoBehaviour {
 	void Update() {
 		if (State != States.Dead)
 		{
-			if (State == States.Attack && NextShot < Time.time)
+			if (State == States.Attack && NextShot &lt; Time.time)
 			{
 				NextShot = Time.time + Firerate;
 				Shoot();
@@ -152,7 +152,7 @@ public class Enemy : MonoBehaviour {
 			if (State == States.Patrol)
 			{
 				RotateToPosition(headingPos, 0.0001f);
-				if (NextTurn < Time.time)
+				if (NextTurn &lt; Time.time)
 				{
 					NextTurn = Time.time + Turnrate;
 					GetRandomRot();
@@ -165,12 +165,12 @@ public class Enemy : MonoBehaviour {
 
 
 			RaycastHit hit;
-			//if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit) && Vector3.Distance(hit.collider.ClosestPoint(transform.position), transform.position) < 8 || rotating == true && hit.collider != null)
-			if (Physics.SphereCast(transform.position, 3, transform.TransformDirection(Vector3.forward), out hit, 18) && Vector3.Distance(hit.point, transform.position) < 8) //collider.ClosestPoint(transform.position)
+			//if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit) && Vector3.Distance(hit.collider.ClosestPoint(transform.position), transform.position) &lt; 8 || rotating == true && hit.collider != null)
+			if (Physics.SphereCast(transform.position, 3, transform.TransformDirection(Vector3.forward), out hit, 18) && Vector3.Distance(hit.point, transform.position) &lt; 8) //collider.ClosestPoint(transform.position)
 			{
 				RotateToPosition(hit.normal, 0.1f);
 
-				if (hit.transform.root.gameObject.tag == "player" && State == States.Attack && Vector3.Distance(transform.position, target.transform.position) <= stoppingDistance || AttackTime < 10)
+				if (hit.transform.root.gameObject.tag == "player" && State == States.Attack && Vector3.Distance(transform.position, target.transform.position) &lt;= stoppingDistance || AttackTime &lt; 10)
 				{
 					EnterPatrolMode();
 				}else if (State == States.Attack && hit.transform.root.tag != "player")
@@ -179,7 +179,7 @@ public class Enemy : MonoBehaviour {
 				}
 
 
-			} else if (hit.collider == null && target != null && State == States.Attack || Vector3.Distance(hit.point, transform.position) > 8 && target != null && State == States.Attack)
+			} else if (hit.collider == null && target != null && State == States.Attack || Vector3.Distance(hit.point, transform.position) &gt; 8 && target != null && State == States.Attack)
 			{
 				RotateToPosition(target.transform.position - transform.position, 0.1f);
 			}
@@ -193,15 +193,15 @@ public class Enemy : MonoBehaviour {
 		rb.AddForce(-(collision.contacts[0].point - transform.position) * 2, ForceMode.Impulse);
 		GameObject ColParticles = Instantiate(CollisionParticles);
 		ColParticles.transform.position = collision.contacts[0].point;
-		if (LastCollision == target.GetComponent<Player>().LastCollision && !scored && health <= 0)
+		if (LastCollision == target.GetComponent&lt;Player&gt;().LastCollision && !scored && health &lt;= 0)
 		{
-			target.GetComponent<Player>().AddScore(100);
-			GameObject.FindWithTag("DialogueManager").GetComponent<DialogueManager>().AddDialogue("That's one way to use that debris I suppose.");
+			target.GetComponent&lt;Player&gt;().AddScore(100);
+			GameObject.FindWithTag("DialogueManager").GetComponent&lt;DialogueManager&gt;().AddDialogue("That's one way to use that debris I suppose.");
 			scored = true;
 		}
-		if (collision.gameObject.GetComponent<Rigidbody>())
+		if (collision.gameObject.GetComponent&lt;Rigidbody&gt;())
 		{
-			collision.gameObject.GetComponent<Rigidbody>().AddForce((collision.contacts[0].point - transform.position) * 8, ForceMode.Impulse);
+			collision.gameObject.GetComponent&lt;Rigidbody&gt;().AddForce((collision.contacts[0].point - transform.position) * 8, ForceMode.Impulse);
 		}
 
 	}
@@ -223,16 +223,16 @@ public class Enemy : MonoBehaviour {
 	public void Damage(int amount)
 	{
 		health -= amount;
-		if (health <= startHealth / 2)
+		if (health &lt;= startHealth / 2)
 		{
 			dmgState1.Play();
 		}
-		if (health <= startHealth / 4)
+		if (health &lt;= startHealth / 4)
 		{
 			dmgState2.Play();
 		}
 
-		if (health <= 0)
+		if (health &lt;= 0)
 		{
 			Die();
 		}
@@ -254,7 +254,7 @@ public class Enemy : MonoBehaviour {
 	void Explode()
 	{
 		GameObject particle = Instantiate(DeathParticle);
-		GetComponent<AudioSource>().Play();
+		GetComponent&lt;AudioSource&gt;().Play();
 		particle.transform.position = this.transform.position;
 		dmgState1.gameObject.transform.SetParent(particle.transform, true);
 		dmgState1.Stop();
@@ -271,20 +271,20 @@ public class Enemy : MonoBehaviour {
 	void Shoot()
 	{
 		GameObject BulletClone = Instantiate(Bullet);
-		BulletClone.GetComponent<Renderer>().material = EnergyMat;
+		BulletClone.GetComponent&lt;Renderer&gt;().material = EnergyMat;
 		BulletClone.transform.position = transform.position;
 		BulletClone.transform.rotation = transform.rotation;
 
-		if (target.GetComponent<Rigidbody>() != null)
+		if (target.GetComponent&lt;Rigidbody&gt;() != null)
 		{
-			BulletClone.transform.LookAt(target.transform.position + target.GetComponent<Rigidbody>().velocity);
+			BulletClone.transform.LookAt(target.transform.position + target.GetComponent&lt;Rigidbody&gt;().velocity);
 		}
 		else
 		{
 			BulletClone.transform.LookAt(target.transform.position + target.transform.forward * 4);
 		}
 
-		BulletClone.GetComponent<Rigidbody>().AddRelativeForce(BulletClone.transform.forward * 40, ForceMode.VelocityChange);
+		BulletClone.GetComponent&lt;Rigidbody&gt;().AddRelativeForce(BulletClone.transform.forward * 40, ForceMode.VelocityChange);
 	}
 
 	public void SetTarget(GameObject trgt)
@@ -296,16 +296,16 @@ public class Enemy : MonoBehaviour {
 	{
 		foreach (GameObject energy in EnergyColors)
 		{
-			if (energy.GetComponent<Renderer>())
-				energy.GetComponent<Renderer>().material = EnergyMat;
-			if (energy.GetComponentInChildren<ParticleSystemRenderer>())
-				energy.GetComponentInChildren<ParticleSystemRenderer>().material = EnergyMat;
-			if (energy.GetComponentInChildren<TrailRenderer>())
-				energy.GetComponentInChildren<TrailRenderer>().material = EnergyMat;
+			if (energy.GetComponent&lt;Renderer&gt;())
+				energy.GetComponent&lt;Renderer&gt;().material = EnergyMat;
+			if (energy.GetComponentInChildren&lt;ParticleSystemRenderer&gt;())
+				energy.GetComponentInChildren&lt;ParticleSystemRenderer&gt;().material = EnergyMat;
+			if (energy.GetComponentInChildren&lt;TrailRenderer&gt;())
+				energy.GetComponentInChildren&lt;TrailRenderer&gt;().material = EnergyMat;
 
-			if (energy.GetComponentInChildren<ParticleSystem>())
+			if (energy.GetComponentInChildren&lt;ParticleSystem&gt;())
 			{
-				ParticleSystem.MainModule main = energy.GetComponentInChildren<ParticleSystem>().main;
+				ParticleSystem.MainModule main = energy.GetComponentInChildren&lt;ParticleSystem&gt;().main;
 				main.startColor = EnergyMat.color;
 			}
 		}
@@ -339,11 +339,11 @@ public class HealStationManager : MonoBehaviour {
     int ActiveAmount;
 
     [SerializeField]
-    List<HealStation> HealStations = new List<HealStation>();
+    List&lt;HealStation&gt; HealStations = new List&lt;HealStation&gt;();
 
 
-    List<HealStation> Actives = new List<HealStation>();
-    List<HealStation> InActives = new List<HealStation>();
+    List&lt;HealStation&gt; Actives = new List&lt;HealStation&gt;();
+    List&lt;HealStation&gt; InActives = new List&lt;HealStation&gt;();
 	// Use this for initialization
 	void Start () {
         Getstations();
@@ -365,7 +365,7 @@ public class HealStationManager : MonoBehaviour {
                 InActives.Add(station);
             }
         }
-        if (Actives.Count < ActiveAmount)
+        if (Actives.Count &lt; ActiveAmount)
         {
             PickNew();
         }

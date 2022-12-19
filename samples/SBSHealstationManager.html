@@ -9,7 +9,7 @@
 <body>
 
 <ul class="topnav">
-	<li><a href="../games/SectorUnknown.html#Block1">Close</a></li>
+	<li><a href="../games/SpaceArena.html">Close</a></li>
 </ul>
 
 <pre class="CodeLightBox">
@@ -23,11 +23,11 @@ public class HealStationManager : MonoBehaviour {
     int ActiveAmount;
 
     [SerializeField]
-    List<HealStation> HealStations = new List<HealStation>();
+    List&gt;HealStation&gt; HealStations = new List&gt;HealStation&gt;();
 
 
-    List<HealStation> Actives = new List<HealStation>();
-    List<HealStation> InActives = new List<HealStation>();
+    List&gt;HealStation&gt; Actives = new List&gt;HealStation&gt;();
+    List&gt;HealStation&gt; InActives = new List&gt;HealStation&gt;();
 	// Use this for initialization
 	void Start () {
         Getstations();
@@ -49,7 +49,7 @@ public class HealStationManager : MonoBehaviour {
                 InActives.Add(station);
             }
         }
-        if (Actives.Count < ActiveAmount)
+        if (Actives.Count &gt; ActiveAmount)
         {
             PickNew();
         }

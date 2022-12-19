@@ -57,12 +57,12 @@ This class also has the function that applies the stored colors to the hovercraf
 			<pre class="Preview">
 public void SetColors(GameObject ParentObj)
 {
-	Transform[] AllChildren = ParentObj.GetComponentsInChildren<Transform>(); //Gets all objects in the hovercraft object
+	Transform[] AllChildren = ParentObj.GetComponentsInChildren&lt;Transform&gt;(); //Gets all objects in the hovercraft object
 	foreach (Transform child in AllChildren)
 	{
-		if (child.GetComponent<Renderer>() != null)
+		if (child.GetComponent&lt;Renderer&gt;() != null)
 		{
-			Material RenderedMat = child.GetComponent<Renderer>().material;
+			Material RenderedMat = child.GetComponent&lt;Renderer&gt;().material;
 			switch (RenderedMat.name.Replace(" (Instance)", "")) //sets the right colors based on material name, other materials are ignored
 			{
 				case "DronePrimary":
@@ -86,9 +86,9 @@ public void SetColors(GameObject ParentObj)
 					break;
 			}
 
-			if (child.GetComponent<TrailRenderer>() != null) //if object has a TrailRenderer, change those colors too
+			if (child.GetComponent&lt;TrailRenderer&gt;() != null) //if object has a TrailRenderer, change those colors too
 			{
-				foreach (Material mat in child.GetComponent<TrailRenderer>().materials)
+				foreach (Material mat in child.GetComponent&lt;TrailRenderer&gt;().materials)
 				{
 					mat.SetColor("_Color", EnergyColor);
 					mat.SetColor("_EmissionColor", EnergyColor);

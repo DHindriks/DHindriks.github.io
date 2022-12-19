@@ -9,7 +9,7 @@
 <body>
 
 <ul class="topnav">
-	<li><a href="../games/SectorUnknown.html#Block1">Close</a></li>
+	<li><a href="../games/SectorUnknown.html#Block2">Close</a></li>
 </ul>
 
 <pre class="CodeLightBox">
@@ -19,10 +19,10 @@ using UnityEngine;
 
 public class DungeonGenerator : MonoBehaviour
 {
-public List<GameObject> Tiles;
+public List&lt;GameObject&gt; Tiles;
 [Space(20)]
 
-public List<GameObject> StartTiles; //the first tiles aren't connected to anything, so they will have room spawn points on all (possible) sides.
+public List&lt;GameObject&gt; StartTiles; //the first tiles aren't connected to anything, so they will have room spawn points on all (possible) sides.
 [Space(15)]
 public GameObject Deadend; //the dead end is a one-way room, used randomly in the dungeon and to close it off when its max rooms is reached.
 public GameObject HardWall; //the hardwall is only a wall, used to close rooms off when there is no space for a full room next to it.
@@ -37,10 +37,10 @@ Material FloorMatBase;
 Material WallMatBase;
 
 [SerializeField]
-List<Color> DungeonColors;
+List&lt;Color&gt; DungeonColors;
 
-public List<GameObject> CurrentDungeonTiles;
-public List<GameObject> CurrentDungeonDeadEnds;
+public List&lt;GameObject&gt; CurrentDungeonTiles;
+public List&lt;GameObject&gt; CurrentDungeonDeadEnds;
 
 [HideInInspector]
 public int PickedLength;
@@ -70,7 +70,7 @@ void Awake()
 
 	seed = GameManager.instance.WorldGenerator.Seed;
 
-	Data = GetComponentInParent<DungeonData>();
+	Data = GetComponentInParent&lt;DungeonData&gt;();
 	Color ColorTop = DungeonColors[seed.Next(0, DungeonColors.Count)];
 	Color ColorBot = ColorTop * 0.05f;
 
@@ -103,30 +103,30 @@ void PopulateDungeon()
 	int CurrentExits = 0;
 
 	//generates all possible exits in dead end rooms
-	for(int i = 0; i <= ExitsNeeded - CurrentExits; i++)
+	for(int i = 0; i &lt;= ExitsNeeded - CurrentExits; i++)
 	{
-		if (CurrentExits >= ExitsNeeded || CurrentDungeonDeadEnds.Count == 0)
+		if (CurrentExits &gt;= ExitsNeeded || CurrentDungeonDeadEnds.Count == 0)
 		{
 			break;
 		}
 		int SelectedDeadEnd = Random.Range(0, CurrentDungeonDeadEnds.Count);
-		CurrentDungeonDeadEnds[SelectedDeadEnd].GetComponent<DungeonDeadEndInteriorSpawner>().SpawnInterior(ExitInterior);
+		CurrentDungeonDeadEnds[SelectedDeadEnd].GetComponent&lt;DungeonDeadEndInteriorSpawner&gt;().SpawnInterior(ExitInterior);
 		CurrentDungeonDeadEnds.RemoveAt(SelectedDeadEnd);
 
 		CurrentExits++;
 	}
 
 	//generates remaining exits in normal rooms
-	if (CurrentExits < ExitsNeeded)
+	if (CurrentExits &lt; ExitsNeeded)
 	{
-		for (int i = 0; i <= ExitsNeeded - CurrentExits; i++)
+		for (int i = 0; i &lt;= ExitsNeeded - CurrentExits; i++)
 		{
-			if (CurrentExits >= ExitsNeeded || CurrentDungeonTiles.Count == 0)
+			if (CurrentExits &gt;= ExitsNeeded || CurrentDungeonTiles.Count == 0)
 			{
 				break;
 			}
 			int SelectedRoom = Random.Range(0, CurrentDungeonTiles.Count);
-			CurrentDungeonTiles[SelectedRoom].GetComponent<RoomSpawnPoint>().SpawnInterior(ExitInterior);
+			CurrentDungeonTiles[SelectedRoom].GetComponent&lt;RoomSpawnPoint&gt;().SpawnInterior(ExitInterior);
 			CurrentDungeonTiles.RemoveAt(SelectedRoom);
 
 			CurrentExits++;
@@ -135,9 +135,9 @@ void PopulateDungeon()
 
 	foreach (GameObject room in CurrentDungeonDeadEnds)
 	{
-		if (room.GetComponent<DungeonDeadEndInteriorSpawner>())
+		if (room.GetComponent&lt;DungeonDeadEndInteriorSpawner&gt;())
 		{
-			room.GetComponent<DungeonDeadEndInteriorSpawner>().SpawnInterior();
+			room.GetComponent&lt;DungeonDeadEndInteriorSpawner&gt;().SpawnInterior();
 		}
 		else
 		{
@@ -147,9 +147,9 @@ void PopulateDungeon()
 
 	foreach (GameObject room in CurrentDungeonTiles)
 	{
-		if(room.GetComponent<RoomSpawnPoint>())
+		if(room.GetComponent&lt;RoomSpawnPoint&gt;())
 		{
-			room.GetComponent<RoomSpawnPoint>().SpawnInterior();
+			room.GetComponent&lt;RoomSpawnPoint&gt;().SpawnInterior();
 		}
 		else
 		{
