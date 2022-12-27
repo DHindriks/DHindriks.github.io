@@ -9,7 +9,7 @@
 <body>
 	<ul class="topnav">
 		<li><a href="../index.html">Home</a></li>
-		<li><a href="../index.html#About">About</a></li>
+		<li><a href="../index.html#Top">About</a></li>
 		<li><a href="../index.html#Projects">Projects</a></li>
 		<li><a href="../index.html#Contact">Contact</a></li>
 	</ul>
@@ -42,7 +42,7 @@
 <div class="contentlarge" style="background-color: #16213E">
 	<h3>About the project</h3>
 	<p>In Sector: Unknown -also called Project Roguespace- the player explores procedurally generated sectors in space which are populated by abandoned structures, enemies and other points of interest.<br><br>
-		This is a solo project that started out as an uni assignment which had a focus on procedural generation. I continued working on the project after the assignment with the aim to release the game on Android devices.
+		This is a solo project that started out as an assignment for the Hanzehogeschool which had a focus on procedural generation. I have continued working on the project after the assignment with the aim to release the game on mobile devices.
 	</p>
 	<img src="../images/RSGameplay.PNG" width="75%" align="middle">
 	<br><br>
@@ -196,7 +196,7 @@
 </video>
 <p>The dungeon generator is mostly done by 2 scripts: DungeonGenerator and RoomSpawnPoint, the Dungeongenerator stores variables like room prefabs, interior prefabs and the current amount of rooms in the dungeon, it also starts the generation process by generating the first room.<br>
 	Each room that can generate has at at least a doorway on the front side and doorways on other sides depending on the room. when the first room is spawned by the DungeonGenerator, the Roomspawnpoint script in each doorway of that room will spawn a room that connects to it. Each room that is spawned will generate connecting rooms until there is no space for more rooms or until the generator has reached the target amount of rooms.<br><br>
-	After reaching the target amount of rooms, the only new rooms that are spawned will be dead ends to close te dungeon, then the dungeon generator will loop through all rooms and populate them with exit points, enemies, loot and decorations.
+	After reaching the target amount of rooms, the only new rooms that are spawned will be dead ends to close te dungeon, then the dungeon generator will loop through all rooms and populate them with exit points, enemies, loot and interior objects.
 
 </p>
 <h4>DungeonGenerator script<h4>
