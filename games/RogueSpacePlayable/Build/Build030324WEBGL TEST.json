@@ -1,0 +1,16 @@
+{
+"companyName": "DefaultCompany",
+"productName": "Sector: Unknown",
+"productVersion": "0.6",
+"dataUrl": "Build030324WEBGL TEST.data.unityweb",
+"wasmCodeUrl": "Build030324WEBGL TEST.wasm.code.unityweb",
+"wasmFrameworkUrl": "Build030324WEBGL TEST.wasm.framework.unityweb",
+"graphicsAPI": ["WebGL 2.0","WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20",
+"cacheControl": {"default": "must-revalidate"},
+"developmentBuild": false,
+"multithreading": false,
+"unityVersion": "2019.4.35f1"
+}
