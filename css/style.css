@@ -47,13 +47,10 @@ video.PageVideo {
 	width: 100%;
 }
 
-ul.topnav li {
-	float: left; 
-	}
-
-ul.topnav li a {
+ul.topnav a {
 	transition: background-color 0.2s ease-in-out;
     display: block;
+	float: left;
     color: #ffffff;
     text-align: center;
     padding: 14px 16px;
@@ -61,12 +58,13 @@ ul.topnav li a {
 	z-index: 10;
 }
 
-ul.topnav li a:hover:not(.active) {
+ul.topnav a:hover:not(.active) {
 	background-color: #BF00CD;
-	}
+	color: #ffffff;
+}
 
-ul.topnav li a.active {
-	background-color: #BF00CD;
+ul.topnav a:active {
+	background-color: #00cd55;
 	color: #ffffff;
 }
 
@@ -212,13 +210,4 @@ a.previewLink {
 a.previewLink :hover {
 	text-decoration: none;
 	color: #ffffff;
-}
-
-a:link, a:visited {
-	color: #ffffff;
-	text-decoration: underline;
-}
-							
-a:link:active, a:visited:active, a:hover {
-	color: #000000;
 }
