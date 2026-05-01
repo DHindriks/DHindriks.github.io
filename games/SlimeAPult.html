@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="../dist/output.css" />
 </head>
-<body class="bg-[url(../images/DTTBanner.PNG)]">
+<body class="bg-[url(../images/SAPLaunch.PNG)] bg-no-repeat bg-position-[-400px_-160px]">
 	<ul class="topnav">
 		<li><a href="../index.html">Home</a></li>
 		<li><a href="../index.html#Top">About</a></li>
@@ -18,50 +18,74 @@
 
 <div class="contentlarge bg-gray-800">
 	<h1 class="MainTitle">Slime-A-Pult</h1>
-	<h4>
-		Launch slimes with different abilities to destroy fortresses.
-	</h4>
-	<br>
-	<img src="../images/SAPHit.PNG" width="75%" align="middle">
-	<br>
-	<h3>Current Features</h3>
-	<ul>
-		<li><p>Projectile selection</p></li>
-		<li><p>projectile ability system</p></li>
-	</ul>
+	<p>
+		A strategy game where the player launches slimes with different abilities to destroy structures.
+	</p>
+	<div class="CodeWindow w-fit"> 
+		<a href="https://github.com/DHindriks/FortressShooter" class="m-2">
+			<p>View the full project on Github</p>
+			<img src="../images/github_PNG20.png" class="imgContact" alt="Github logo">
+		</a>
+	</div>
 
-	
-</div>
+	</div>
 
 <div class="contentlarge bg-gray-950">
-	<h3>About the project</h3>
-	<p>
-		Slime-A-Pult was a school project made in a team of 2 artists, a designer and me as the programmer. The only requirement for this project was for the game to have emergent gameplay.<br>
-		The goal of the game we made is to destroy different kinds of fortresses by launching different kinds of slimes at them. To achieve emergent gameplay, the player has the freedom to choose which slimes to launch and come up with new strategies.
-	</p>
-	<p>
-		The goal of each level is to destroy as much as possible, after reaching a certain percentage the player can choose to end the level which will show the percentage of destroyed blocks and how many slimes the player launched.
-	</p>
-	<img src="../images/SAPLaunch.PNG" width="75%" align="middle">
-	<br><br>
-	<h3 id="Block1">Slime selection system</h3>
-	<p> 
-		The player has the freedom to strategize and pick which slimes to launch, the available slimes are:
-	</p>
-	<ul>
-		<li><p>Normal slime: This standard slime has no ability, it will deal damage when hitting blocks</p></li>
-		<li><p>Metal slime: This slime also has no ability but is a lot heavier than the normal slime, it is easier to topple structures with it.</p></li>
-		<li><p>Slingshot slime: This slime is not meant to do direct damage, when it's ability is activated it will transform in a new catapult that can catch slimes and blocks that the player can launch again.</p></li>
-		<li><p>Bouncy slime: A slime similar to the slingshot slime, this slime transforms into a trampoline that boosts slimes and blocks bouncing off of it.</p></li>
-		<li><p>Bomb slime: A slime that explodes when its ability activates, the explosion will launch nearby blocks and slimes.</p></li>
-		<li><p>Ice slime: This slime will also explode when its ability activates, instead of displacing objects it will freeze them, this slime can do damage on its own but is usually used to weaken structures for other slimes.</p></li>
-	</ul>
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">About the project</h3>
+		<p>
+			Slime-A-Pult -also called project Fortress Shooter- is a team project made during my study at the Hanzehogeschool.<br>
+			The project was made by a small team of 2 graphic designers, a gameplay designer and me as the programmer.
+		</p>
+		<br>
+		<p>
+			The goal of this project was to create "emergent gameplay": to create multiple game mechanics that players can use to create their own unexpected strategies.
+		</p>
+		<br>
+		<p>
+			There are multiple levels in the game, in these levels the player can choose from different types of slimes to launch, each slime has different stats and abilities that can work together to create new strategies.<br>
+			A certain percentage of the structures need to be destroyed before the player can progress to the next level, the destruction percentage as well as the amount of launched slimes is displayed at the end of a level as some form of score.
+		</p>
 
-	<p>This script stores the prefabs of each projectile and also generates the buttons in the UI, this makes it easy to add new slimes as the prefab can </p>
+		<div class="mx-auto block m-5">
+			<img src="../images/SAPHit.PNG" class="PageImg">
+			<p class="italic text-gray-400">Gameplay screenshot of a slime hitting a structure.</p>
+		</div>
+	</div>
 
-	<div class=CodeWindow>
-		<pre class="Preview">
-			
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Different slime types</h3>
+		<p>
+			Players can pick which slime they want to launch from a menu, these slimes have different abilities that adds gameplay elements or destroys structures.
+		</p>
+
+		<p>
+			Some of the slime abilities available to the player are:<br>
+			→ A Slingshot slime that transforms into a slingshot that can grab slimes and blocks so the player can re-launch them.<br>
+			→ A Bouncy slime that transforms into a speed-boosting trampoline.<br>
+			→ An Ice slime that freezes blocks to weaken them.<br>
+			→ A Heavy slime that has a much stronger impact than other slimes.
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/SAPGame.PNG" class="PageImg">
+			<p class="italic text-gray-400">Slime selection menu.</p>
+		</div>
+
+	</div>
+
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Code sample: Slime selection system</h3>
+		<p>
+			The projectile selector script contains list that contains all available slime prefabs, the selection UI is generated based on this list, which makes it easy for a designer to add new slimes by dragging a new prefab into the list.
+		</p>
+
+		<p>
+			The second projectile list in this script was only used for debugging the game while it was in development, it adds more slimes to the selection system that can quickly clear levels for testing purposes.
+		</p>
+
+		<div class="CodeWindow">
+			<pre><plaintext><code>
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -69,10 +93,10 @@ using UnityEngine.UI;
 public class ProjectileSelector : MonoBehaviour
 {
 	[SerializeField]
-	List&lt;GameObject&gt; ProjectileList;
+	List<GameObject> ProjectileList;
 
 	[SerializeField]
-	List&lt;GameObject&gt; ProjectileDBGList;
+	List<GameObject> ProjectileDBGList;
 
 	[SerializeField]
 	bool DBG;
@@ -85,7 +109,7 @@ public class ProjectileSelector : MonoBehaviour
 	void Start()
 	{
 		GenerateList();
-		animator = GetComponentInParent&lt;Animator&gt;();
+		animator = GetComponentInParent<Animator>();
 	}
 
 
@@ -99,9 +123,9 @@ public class ProjectileSelector : MonoBehaviour
 		foreach(GameObject Projectile in ProjectileList)
 		{
 			GameObject Btn = Instantiate(Button, transform);
-			Btn.GetComponent&lt;Image&gt;().sprite = Projectile.GetComponent&lt;ProjectileData&gt;().Icon;
-			Btn.GetComponent&lt;Button&gt().onClick.AddListener(delegate { ToggleWindow(); });
-			Btn.GetComponent&lt;Button&gt().onClick.AddListener(delegate { GameManager.Instance.MainSlingshot.SpawnProjectile(Projectile); });
+			Btn.GetComponent<Image>().sprite = Projectile.GetComponent<ProjectileData>().Icon;
+			Btn.GetComponent<Button>().onClick.AddListener(delegate { ToggleWindow(); });
+			Btn.GetComponent<Button>().onClick.AddListener(delegate { GameManager.Instance.MainSlingshot.SpawnProjectile(Projectile); });
 		}
 
 		if (DBG)
@@ -109,17 +133,19 @@ public class ProjectileSelector : MonoBehaviour
 			foreach (GameObject Projectile in ProjectileDBGList)
 			{
 				GameObject Btn = Instantiate(Button, transform);
-				Btn.GetComponent&lt;Image&gt;().sprite = Projectile.GetComponent&lt;ProjectileData&gt;().Icon;
-				Btn.GetComponent&lt;Button&gt;().onClick.AddListener(delegate { ToggleWindow(); });
-				Btn.GetComponent&lt;Button&gt;().onClick.AddListener(delegate { GameManager.Instance.MainSlingshot.SpawnProjectile(Projectile); });
+				Btn.GetComponent<Image>().sprite = Projectile.GetComponent<ProjectileData>().Icon;
+				Btn.GetComponent<Button>().onClick.AddListener(delegate { ToggleWindow(); });
+				Btn.GetComponent<Button>().onClick.AddListener(delegate { GameManager.Instance.MainSlingshot.SpawnProjectile(Projectile); });
 			}
 		}
 	}
 }
-			
-
+			</code></plaintext></pre>
+		</div>
+	</div>
 
 </div>
+
 </div>
 
 </body>

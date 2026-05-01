@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="../dist/output.css" />
 </head>
-<body class="bg-[url(../images/DTTBanner.PNG)]">
+<body class="bg-[url(../images/Plastic_Catastrophe_Splashscreen_V.1.jpg)] bg-no-repeat bg-position-[0px_-160px]">
 	<ul class="topnav">
 		<li><a href="../index.html">Home</a></li>
 		<li><a href="../index.html#Top">About</a></li>
@@ -18,52 +18,74 @@
 
 <div class="contentlarge bg-gray-800">
 	<h1 class="MainTitle">Plastic Catastrophe</h1>
-	<h4>An augmented reality game where the player trains animals and cleans up the environment</h4>
-	<br>
-	<img src="../images/Plastic_Catastrophe_Splashscreen_V.1.jpg" width="75%" align="middle">
-	<br>
-	<h3>Current Features</h3>
-	<ul>
-		<li><p>Inventory and shop system.</p></li>
-		<li><p>Virtual map that tracks the player's location using GPS.</p></li>
-		<li><p>Character selection and leveling</p></li>
-	</ul>
-</div>
+	<p>
+		A game where the player helps animals clean up the environment, it is meant to bring awareness to pollution and littering.
+	</p>
+	<div class="CodeWindow w-fit"> 
+		<a href="https://github.com/DHindriks/PlasticCatastrophe" class="m-2">
+			<p>View the full project on Github</p>
+			<img src="../images/github_PNG20.png" class="imgContact" alt="Github logo">
+		</a>
+	</div>
+
+	</div>
 
 <div class="contentlarge bg-gray-950">
-	<h3>About the project</h3>
-	<p>This project was made during my study at the Hanzehogeschool, the goal of the project was to raise the awareness of plastic pollution.<br>
-	Since plastic waste decomposes very slowly and tons of it eventually ends up in bodies of water, our main focus was on nature in and around water.</p>
-	<p>The game itself was made in a team of 7: 3 artists, 2 designers and another programmer. In this project I worked on the GPS map, minigames, character selection & leveling, Item spawning and the pollution system among other things.<br></p>
-	<br>
-	<img src="../images/PCMap.PNG" width="20%" align="middle">
-	<br><br>
-	<p>
-		The game is made for mobile devices and uses the device's GPS to place the player in the right position of the virtual map. <br>
-		The map itself was made using the Mapbox SDK for Unity, this package allowed us to customize how the map looked in game and leave out redundant information like location names.<br>
-	</p>
-	<p>
-		The goal of the game is to clean up the environment with a selection of animals, waste items will spawn on the map around the player as they walk around which the player can interact with.<br>
-		A minigame will start when the player interacts with an item, this minigame needs to be won to succesfully pick up that item.<br>
-		The minigame the player needs to play depends on the lead animal which the player selected. There currently are 3 animals in the game: Seagul, Seal and Turtle, each animal has its own minigame as well: the seagul's minigame focuses on getting the right timing to drop the item in the basket, the seal needs to be held upright as it balances the item towards the basket and the turtle needs to aim his slingshot to hit the target.<br>
-		After completing the minigame, the player receives the item and the lead animal receives experience based on the dangers that item poses to its species. 
-	</p>
-	
-	<h3 id="Block1">Character system</h3>
-	<p>
-        The functions below manage the character switching and data. The Character is set by the SetChar function, this function will start by saving the data from the previous character and loading de data for the new one.<br>
-         It also calculates fow much time has passed since the new animal was last used to determine the amount of energy the animal has recovered, as well the amount of health the animal has based on its level.
-    </p>
-    <p>
-        At the end SpawnCharacter funtion is called, this function removes the previous animal model and replaces it with the chosen animal. 
-    </p>
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">About the project</h3>
+		<p>
+            This was a team project made during my study at the Hanzehogeschool, the goal of the project was to raise the awareness of plastic pollution.<br>
+            Since plastic waste decomposes very slowly and tons of it eventually ends up in bodies of water, our main focus was on nature in and around water.
+		</p>
+        <p> 
+            The group that made the game consisted of 7 people: 3 artists, 2 designers and 2 programmers.<br> 
+            In this project I took the role of programmer, working mostly on the GPS map, minigames, character selection & leveling, Item spawning and the pollution system.
+        </p>
+    </div>
 
-	<div class=CodeWindow>
-		<a href="../samples/PCCharSystem.html" class="previewLink">
-			<div><p>Character script(Click for full view)</p></div>
-		</a>
-		<pre class="Preview">
-		
+    <div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Game mechanics</h3>
+        <p>
+            The game is made for mobile devices, it makes use of GPS to synchronise the virtual world to the player's location in real-life.<br>
+            In the game the player can pick between 3 different animals: the Turtle, Seal, and Seagull, the chosen animal represents the player on the map and becomes the current helper.
+        </p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/PCCharacters.jpg" class="PageImg">
+			<p class="italic text-gray-400">The character select screen with the different characters the player can choose.</p>
+		</div>
+
+        <p>
+            Different kinds of litter appear in the virtual world as the player moves around, tapping a piece of litter will start a minigame to collect it.<br>
+            Successfully completing a collection minigame will add a piece of litter to the player's inventory to be recycled, it also lowers the pollution score and gives experience to the current helper animal.<br>
+            Helper animals can be leveled up by gaining experience to give them more energy to pick up litter, and the collected litter can be recycled to craft helpful perks for the animals.
+        </p>
+
+        <div class="mx-auto block m-5">
+			<img src="../images/PCMap.PNG" class="PageImg">
+			<p class="italic text-gray-400">A screenshot of the map, the map and GPS system were made in unity using the Mapbox Unity package.</p>
+		</div>
+
+        <div class="mx-auto block m-5">
+			<img src="../images/PCMiniTurtle.PNG" class="PageImg">
+			<p class="italic text-gray-400">The turtle's litter collection game: every animal has its own minigame to collect litter.<br>
+            In the case of the turtle, the player needs to shoot the piece of litter from a slingshot into the collection bin.
+            </p>
+		</div>
+	</div>
+
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Code sample: Character system</h3>
+		<p>
+			The functions below manage the character switching and data. The Character is set by the SetChar function, this function will start by saving the data from the previous character and loading de data for the new one.<br>
+            It also calculates fow much time has passed since the new animal was last used to determine the amount of energy the animal has recovered, as well the amount of health the animal has based on its level.
+		</p>
+
+		<p> 
+			At the end SpawnCharacter funtion is called, this function removes the previous animal model and replaces it with the chosen animal.
+		</p>
+		<div class="CodeWindow">
+			<pre><code>
 //sets the selected character based on character's ID value;
 public void SetChar(int CharID){
 
@@ -80,7 +102,7 @@ public void SetChar(int CharID){
     //looks for a save for the animal, if not found, creates a new, default one.
     if (SaveSystem.LoadAnimalData(CurrentChar) == null)
     {
-        Debug.Log("&lt;color=green&gt;Creating new save for character ID: " + CurrentChar.ID + " Name: " + CurrentChar.Name + "&lt;/color&gt;");
+        Debug.Log("<color=green>Creating new save for character ID: " + CurrentChar.ID + " Name: " + CurrentChar.Name + "</color>");
         CurrentChar.NextLevelReq = CurrentChar.BaseLevelReq;
         SaveSystem.SaveAnimalData(CurrentChar);
     }else
@@ -97,7 +119,7 @@ public void SetChar(int CharID){
         CurrentChar.Energy = data.Energy;
         CurrentChar.LastUsed = data.TimeStamp;
 
-        for (int i = 0; i &lt; data.PerksUnlocked.Length; i++)
+        for (int i = 0; i < data.PerksUnlocked.Length; i++)
         {
             CurrentChar.PerkList[i].Unlocked = data.PerksUnlocked[i];
         }
@@ -124,7 +146,7 @@ public void SetChar(int CharID){
                 CurrentChar.Energy += ((((float)(System.DateTime.UtcNow - epochStart).TotalSeconds - data.TimeStamp) / 60) /60) * 8;
             }
 
-            if (CurrentChar.Energy &gt; maxHealth)
+            if (CurrentChar.Energy > maxHealth)
             {
                 CurrentChar.Energy = maxHealth;
             }
@@ -152,11 +174,12 @@ void SpawnCharacter(bool ClearPrevious = true)
 
     Instantiate(CurrentChar.Prefab, CharContainer.transform);
 }
-		
-		</pre>
+            </code></pre>
+		</div>
 	</div>
 
 </div>
+
 </div>
 
 </body>

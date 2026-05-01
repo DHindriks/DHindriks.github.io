@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="../dist/output.css" />
 </head>
-<body class="bg-[url(../images/DTTBanner.PNG)]">
+<body class="bg-[url(../images/FroneBG2021.PNG)]">
 	<ul class="topnav">
 		<li><a href="../index.html">Home</a></li>
 		<li><a href="../index.html#Top">About</a></li>
@@ -18,40 +18,98 @@
 
 <div class="contentlarge bg-gray-800">
 	<h1 class="MainTitle">Frone</h1>
-	<p>Frone was a learning project made during my studies at the Alfa-College.</p>
-	<br>
-	<img src="../images/FroneTank.png" width="75%" align="middle">
-	<br>
+	<p>
+		A sci-fi endless runner project that I worked on to learn how certain mechanics were made.
+	</p>
 
-	
 </div>
 
 <div class="contentlarge bg-gray-950">
-	<h3>About the project</h3>
-	<p>Frone started out as a project for my study at Alfa-College, after the project was done I continued working on the game with the goal of learning more about features that would usually not be made in school projects due to time constraints.<br></p>
-	<p>The game has a post-apocalyptic setting, the premise of the game is that aliens have invaded earth. After the invasion different surviving factions started using these drones that are fast enough to outrun the aliens for a variety of tasks.</p>
-	<img src="../images/FroneFlip.png" width="75%" align="middle">
-	<br><br>
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">About the project</h3>
+		<p>
+			Frone started out as a project for my study at Alfa-College, after the project was done I continued working on the game with the goal of learning more about common game features that would usually not be made in school projects due to time constraints.
+		</p>
 
-<h3>Player customization</h3>
-<p>In the game, the player can collect and play as different hovercrafts, each hovercraft has an ability that can help it survive as well as colors that can be customised by the player.<br>
-Colors are seperated into 4 categories: primary, secondary, accents and energy. Each of these colors can be chosen by the player to create different combinations.</p>
-<img src="../images/FroneCustomize.png" width="75%" align="middle">
-<img src="../images/FroneCustomize2.png" width="75%" align="middle">
-<p>
-The colors are tracked in the drone settings class, each hovercraft has a settings class attached to it that stores the colors, animations and wether the hovercraft has been unlocked by the player.<br>
-This class also has the function that applies the stored colors to the hovercraft, so the color picker will change the color variable and then call this function:
-</p>
-<div class=CodeWindow>
-			<pre class="Preview">
+		<p>
+			Some of the specific mechanics I wanted to learn more about were:<br>
+			→ Item and Inventory systems.<br>
+			→ Character customization.<br>
+			→ Character selection and unique character abilities.<br>
+			→ A shop system.<br>
+			→ Saving and loading data.
+		</p>
+
+		<br>
+
+		<p>
+			The game itself is an endless runner, the player controls a hovercraft and has to dodge obstacles and other dangers.
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/FroneFlip.png" class="PageImg">
+			<p class="italic text-gray-400"></p>
+		</div>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/FroneGamplay.png" class="PageImg">
+			<p class="italic text-gray-400"></p>
+		</div>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/FroneMission.png" class="PageImg">
+			<p class="italic text-gray-400">Gameplay images.</p>
+		</div>
+	</div>
+
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Character customization</h3>
+		<p>
+			There are multiple hovercrafts in the game, some of them are unlocked from the start, while others have to be bought from different factions in the game.<br>
+			In the Factions menu, the player can choose to support one of the factions, this earns the player reputation for that faction which can be used to buy new hovercrafts.
+		</p>
+		
+		<p>
+			Hovercrafts have different stats and abilities, making each hovercraft a bit different in gameplay.
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/FroneFaction.png" class="PageImg">
+			<p class="italic text-gray-400">The faction menu of one of the factions.</p>
+		</div>
+
+		<p>
+			The color scheme of each hovercraft can also be changed, by changing the Primary, Secondary, Details and Energy channels hovercrafts can be given a different look. 
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/FroneCustomize.png" class="PageImg">
+			<p class="italic text-gray-400"></p>
+		</div>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/FroneCustomize2.png" class="PageImg">
+			<p class="italic text-gray-400">The same hovercraft with a different color scheme.</p>
+		</div>
+	</div>
+
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Code sample: color customization handling</h3>
+		<p>
+			The colors are stored in the drone settings class, each hovercraft has a settings class attached to it that stores the colors and wether the hovercraft has been unlocked by the player.<br>
+			This class also has the function that applies the stored colors to the hovercraft, so the color picker will change the color variable and then call this function: 
+		</p>
+		
+		<div class="CodeWindow"> 
+			<pre><code>
 public void SetColors(GameObject ParentObj)
 {
-	Transform[] AllChildren = ParentObj.GetComponentsInChildren&lt;Transform&gt;(); //Gets all objects in the hovercraft object
+	Transform[] AllChildren = ParentObj.GetComponentsInChildren<Transform>(); //Gets all objects in the hovercraft object
 	foreach (Transform child in AllChildren)
 	{
-		if (child.GetComponent&lt;Renderer&gt;() != null)
+		if (child.GetComponent<Renderer>() != null)
 		{
-			Material RenderedMat = child.GetComponent&lt;Renderer&gt;().material;
+			Material RenderedMat = child.GetComponent<Renderer>().material;
 			switch (RenderedMat.name.Replace(" (Instance)", "")) //sets the right colors based on material name, other materials are ignored
 			{
 				case "DronePrimary":
@@ -75,9 +133,9 @@ public void SetColors(GameObject ParentObj)
 					break;
 			}
 
-			if (child.GetComponent&lt;TrailRenderer&gt;() != null) //if object has a TrailRenderer, change those colors too
+			if (child.GetComponent<TrailRenderer>() != null) //if object has a TrailRenderer, change those colors too
 			{
-				foreach (Material mat in child.GetComponent&lt;TrailRenderer&gt;().materials)
+				foreach (Material mat in child.GetComponent<TrailRenderer>().materials)
 				{
 					mat.SetColor("_Color", EnergyColor);
 					mat.SetColor("_EmissionColor", EnergyColor);
@@ -96,9 +154,9 @@ public void SetColors(GameObject ParentObj)
 		}
 	}
 }
-			</pre>
+			</code></pre>
 		</div>
-
+	</div>
 
 </div>
 

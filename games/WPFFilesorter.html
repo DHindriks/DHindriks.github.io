@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="../dist/output.css" />
 </head>
-<body class="bg-[url(../images/DTTBanner.PNG)]">
+<body class="bg-[url(../images/WPFFS4.PNG)]">
 	<ul class="topnav">
 		<li><a href="../index.html">Home</a></li>
 		<li><a href="../index.html#Top">About</a></li>
@@ -18,30 +18,133 @@
 
 <div class="contentlarge bg-gray-800">
 	<h1 class="MainTitle">WPF File sorter</h1>
-	<h4> This project was made to learn more about the tools in Microsoft .NET, especially Windows Presentation Foundation to create applications. 
-	</h4>
-	<br>
-	<img src="../images/WPFFS1.PNG" width="75%" align="middle">
-	<br>
-</div>
+	<p>
+		In the past I used to sort my downloaded files using a Batch script, I chose to re-create this tool with more advanced and user-friendly features as a way to learn .NET, specifically WPF.<br>
+		This re-created version of the app sorts files like the old version, but now the user can also change paths and set up rulesets within the app itself.
+	</p>
+	<div class="CodeWindow w-fit"> 
+		<a href="https://github.com/DHindriks/FileSorter" class="m-2">
+			<p>View the full project on Github</p>
+			<img src="../images/github_PNG20.png" class="imgContact" alt="Github logo">
+		</a>
+	</div>
+
+	</div>
 
 <div class="contentlarge bg-gray-950">
-	<h3>About the project</h3>
-	<p>The File Sorter app sorts files based on their file type, users can set up rules within the app to specify where each file type gets sorted to.</p>
-	<img src="../images/WPFFS3.PNG" width="75%" align="middle">
-	<br><br>
-	<p> 
-		In the "Profiles" section of the app the user can set up different rules. Each rule contains: <br> 
-		• Target folder: The name of the folder that files get sorted to.<br>
-		• Extensions: A list of the file types that get sorted to the target folder.<br>
-	</p>
-	<p> 
-		The rulesets that the user creates can be saved in the app, they can also be exported and imported in the JSON format so that they can be easily stored or moved to other devices.
-	</p>
-	<img src="../images/WPFFS4.PNG" width="75%" align="middle">
-	<p> 
-		Starting the sort process will move all files in the specified folder according to the ruleset made by the user, files that do not get sorted anywhere get placed in a seperate miscellaneous folder.
-	</p>
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">About the project</h3>
+		<p>
+			From the main view of the app, the user can enter the settings and profiles menu to adjust settings and change the sorting ruleset.
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/WPFFS1.PNG" class="PageImg">
+			<p class="italic text-gray-400">The main view of the app.</p>
+		</div>
+
+		<p>
+			Clicking the Sort button starts the sorting process according to the rules set by the user, the sorted files and their destinations will be displayed in the info field.
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/WPFFS4.PNG" class="PageImg">
+			<p class="italic text-gray-400">The sorter displays the changes it makes during the sorting process.</p>
+		</div>
+	</div>
+
+
+
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Changing rulesets</h3>
+		<p>
+			The ruleset is managed in the Profiles menu, here the user can add, edit and remove rules.<br>
+			When the user adds a new rule, they can fill in the name of the target folder and add a list of file extensions that belong in that target folder.
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/WPFFS3.PNG" class="PageImg">
+			<p class="italic text-gray-400">The Profiles view.</p>
+		</div>
+
+		<p>
+			The profiles menu also has an export and import function, a ruleset can be saved as a JSON file to easily store or transfer them.
+		</p>
+	</div>
+
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Code sample: MVVM pattern</h3>
+		<p>
+			When researching how to switch between different views/menus, multiple sources recommended or discussed implementing a MVVM design pattern.<br>
+			This design pattern is mostly meant for larger applications that have a lot of different views/menus, in the code this pattern makes it easier to switch between views and manage the state the app is in.<br>
+			Even though the sorting app is not that large with 3 different menus, I wanted to implement this system for potential future additions and to understand the system better.
+		</p>
+
+		<p>
+			In a Model-View-ViewModel pattern every window/menu has its own ViewModel script that links the visual menu and the underlying logic together.<br>
+			This script is the Root viewmodel, it is the only one that does not have a menu linked to it, instead this viewmodel manages the other viewmodels by creating and storing them.<br>
+			The root viewmodel is also responsible for switching between menus and tracking which menu is being viewed, a single script managing this functionality makes the app more stable and easier to manage.
+		</p>
+
+		<div class="CodeWindow">
+			<pre><code>
+using FileSorter.Rule_system;
+
+namespace FileSorter.ViewModels
+{
+    public class RootViewModel : ViewModelBase
+    {
+        private readonly ISorter _sorter;
+        private readonly RuleService _ruleService = new RuleService();
+
+        public ViewModelBase CurrentViewModel { get; private set; }
+
+        private MainViewModel _mainVm;
+        private SettingsViewModel _settingsVm;
+        private ProfilesViewModel _profilesVm;
+
+        public RootViewModel()
+        {
+            if (_sorter == null)
+            {
+                _sorter = new Sorter(_ruleService);
+            }
+            _ruleService.Load();
+            ShowMain();
+        }
+
+        private void ShowMain()
+        {
+            _mainVm ??= new MainViewModel(
+                _sorter,
+                ShowSettings,
+                ShowProfiles);
+
+            CurrentViewModel = _mainVm;
+            OnPropertyChanged(nameof(CurrentViewModel));
+        }
+
+        private void ShowSettings()
+        {
+            _settingsVm ??= new SettingsViewModel(ShowMain);
+            CurrentViewModel = _settingsVm;
+            OnPropertyChanged(nameof(CurrentViewModel));
+        }
+
+        private void ShowProfiles()
+        {
+            _profilesVm ??= new ProfilesViewModel(_ruleService, ShowMain);
+            CurrentViewModel = _profilesVm;
+            OnPropertyChanged(nameof(CurrentViewModel));
+        }
+    }
+}
+
+			</code></pre>
+		</div>
+	</div>
+
+</div>
 
 </div>
 

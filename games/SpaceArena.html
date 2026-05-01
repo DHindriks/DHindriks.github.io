@@ -6,54 +6,167 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="../dist/output.css" />
 </head>
-<body class="bg-[url(../images/DTTBanner.PNG)]">
-<ul class="topnav">
-	<li><a href="../index.html">Home</a></li>
-	<li><a href="../index.html#Top">About</a></li>
-	<li><a href="../index.html#Projects">Projects</a></li>
-	<li><a href="../index.html#Contact">Contact</a></li>
-</ul>
+<body class="bg-[url(../images/SBSIngame.png)] bg-center">
+	<ul class="topnav">
+		<li><a href="../index.html">Home</a></li>
+		<li><a href="../index.html#Top">About</a></li>
+		<li><a href="../index.html#Projects">Projects</a></li>
+		<li><a href="../index.html#Contact">Contact</a></li>
+	</ul>
 
 <div  class="emptydiv" id="Top"></div>
 
 <div class="contentlarge bg-gray-800">
 	<h1 class="MainTitle">Space Battle Arena</h1>
-	<h4>An arcade shooter where the player competes for the highscore by surviving and defeating enemies.
-	</h4>
-	<br>
-	<img src="../images/SBSIngame.png" width="75%" align="middle">
-	<br>
-	<h3>Features</h3>
-	<ul>
-		<li><p>Enemy ai with randomized stats.</p></li>
-		<li><p>randomized Healing locations.</p></li>
-	</ul>	
-</div>
+	<p>
+		My graduation project at the Alfa-College, this solo project is an arcade space shooter where the player needs to survive as long as possible and destroy waves of enemy ships to gain score.
+	</p>
+	<div class="CodeWindow w-fit"> 
+		<a href="https://github.com/DHindriks/SpaceBattlearena" class="m-2">
+			<p>View the full project on Github</p>
+			<img src="../images/github_PNG20.png" class="imgContact" alt="Github logo">
+		</a>
+	</div>
+
+	</div>
 
 <div class="contentlarge bg-gray-950">
-	<h3>About the project</h3>
-	<p>Space Battle Arena is the project I made as my graduation project for my study at the Alfa-College, it is mostly a solo project with only the textures for the UI being made by an artist.</p>
-	<p>The game is an third person shooter where the player controls a spaceship , the goal is to defeat enemy spaceships and survive as long as possible.</p>
-	<img src="../images/SBSMenu.png" width="75%" align="middle">
-	<br><br>
-	<h3 id="Block1">Enemy AI</h3>
-	<p> 
-		This was my first attempt at creating enemy AI, it is a finite state machine that uses an enum to store and track the different states. 
-	</p>
-	<p>The enemies have 3 different states: Patrol, Attack and Dead. <br>
-		In the patrol state the enemy wanders around and occasionally changes direction while enemies in the attack state will head towards the player while shooting at the player's heading position.<br>
-		Enemies will enter the Dead state when they have no health left, in this state they will briefly float around uncontrollably before exploding.
-	</p>
-	<p>To create some variety in the enemies, each enemy will have variables that are randomized to a certain extend, which change their behaviour and stats. <br>
-		With randomized speed and health some enemies will be faster and/or stronger than others while randomized avoiding distance and attack cooldown will adjust how aggressive and reckless they are.  
-	</p>
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">About the project</h3>
+		<p>
+			The game takes place around a space station, the structure and other debris floating nearby provide cover for the player.<br>
+			The goal is to get a high score: Points are earned by destroying enemy ships, and the game ends when the player is destroyed.
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/SBSCombat.png" class="PageImg">
+			<p class="italic text-gray-400">In combat with enemies.</p>
+		</div>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/SBSMenu.png" class="PageImg">
+			<p class="italic text-gray-400">The main menu, the player with the highest score is displayed here.</p>
+		</div>
+
+	</div>
+
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Code sample: Player healing</h3>
+		<p>
+			The player can take a few hits without being completely destroyed: any damage that the player takes will first be absorbed by the player's shield, this shield is indicated in the UI as a blue health bar.<br>
+			Shields are restored automatically, it will start to recharge if the player hasn't taken any damage for a few seconds.
+		</p>
+
+		<p>
+			When the shield bar reaches 0, any further damage taken will reduce the player's true health that is indicated as the red health bar.
+			The game is over when the player's health reaches 0, Health can be restored by finding an active healstation somewhere within the arena.
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/SBSHealstationSingle.png" class="PageImg">
+			<p class="italic text-gray-400">An active heal station, players need to get close to heal their health.</p>
+		</div>
+
+		<p>
+			There are multiple healing stations around the arena, but only 2 of them are active at a time.<br>
+			A healing station deactivates when it is used by the player, the HealStationManager script below then picks a random inactive healstation to activate.<br>
+			This can make it somewhat difficult to heal, as the player will need to check the different healing stations to find an active one.
+		</p>
 
 
-	<div class=CodeWindow>
-		<a href="../samples/SBSEnemyAI.html" class="previewLink">
-			<div><p>Enemy AI script(Click for full view)</p></div>
-		</a>
-		<pre class="Preview">
+		<div class="CodeWindow">
+			<pre><code>
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class HealStationManager : MonoBehaviour {
+
+    [SerializeField]
+    int ActiveAmount;
+
+    [SerializeField]
+    List<HealStation> HealStations = new List<HealStation>();
+
+
+    List<HealStation> Actives = new List<HealStation>();
+    List<HealStation> InActives = new List<HealStation>();
+	// Use this for initialization
+	void Start () {
+        Getstations();
+        SetManager();
+	}
+	
+    public void Getstations()
+    {
+        Actives.Clear();
+        InActives.Clear();
+
+        foreach (HealStation station in HealStations)
+        {
+            if (station.Active == true)
+            {
+                Actives.Add(station);
+            }else if (station.Skip == false)
+            {
+                InActives.Add(station);
+            }
+        }
+        if (Actives.Count < ActiveAmount)
+        {
+            PickNew();
+        }
+        ResetSkippables();
+    }
+
+    void PickNew()
+    {
+        int RandomStation = Random.Range(0, InActives.Count);
+        HealStation pickedStation = InActives[RandomStation];
+        pickedStation.ToggleActive();
+        Getstations();
+    }
+
+    void ResetSkippables()
+    {
+        foreach (HealStation station in HealStations)
+        {
+            station.Skip = false;
+        }
+    }
+
+    void SetManager()
+    {
+        foreach (HealStation station in HealStations)
+        {
+            station.Manager = this;
+        }
+    }
+}
+			</code></pre>
+
+		</div>
+	</div>
+
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Code sample: Enemy AI</h3>
+		<p>
+			Enemies use a state machine to track their current behaviour state, the 3 states enemies can have are: Patrol, Attack and Dead.
+		</p>
+
+		<p> 
+			Enemies will switch to the patrol state to avoid obstacles and start their attack run after a cooldown.<br>
+			The health, speed, attack cooldown and the distance at which they'll start avoiding danger is randomized when an enemy spawns in, making enemies more or less aggressive, tanky, fast and reckless.
+		</p>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/SBSEnemy.png" class="PageImg">
+			<p class="italic text-gray-400">Close-up of an enemy ship, the low-poly style of the environment and ships were inspired by the visuals of Star Fox on Nintendo's SNES.</p>
+		</div>
+
+
+		<div class="CodeWindow">
+			<pre><code>
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -80,7 +193,7 @@ public class Enemy : MonoBehaviour {
 	[SerializeField]
 	GameObject DeathParticle;
 	[SerializeField]
-	List&lt;GameObject&gt; EnergyColors;
+	List<GameObject> EnergyColors;
 
 	Vector3 headingPos;
 
@@ -104,7 +217,7 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Awake() {
 		State = States.Patrol;
-		rb = GetComponent&lt;Rigidbody&gt;();
+		rb = GetComponent<Rigidbody>();
 		speed = Random.Range(750, 1500);
 		health = Random.Range(75, 150);
 		stoppingDistance = Random.Range(8, 16);
@@ -143,7 +256,7 @@ public class Enemy : MonoBehaviour {
 	void Update() {
 		if (State != States.Dead)
 		{
-			if (State == States.Attack && NextShot &lt; Time.time)
+			if (State == States.Attack && NextShot < Time.time)
 			{
 				NextShot = Time.time + Firerate;
 				Shoot();
@@ -152,7 +265,7 @@ public class Enemy : MonoBehaviour {
 			if (State == States.Patrol)
 			{
 				RotateToPosition(headingPos, 0.0001f);
-				if (NextTurn &lt; Time.time)
+				if (NextTurn < Time.time)
 				{
 					NextTurn = Time.time + Turnrate;
 					GetRandomRot();
@@ -165,12 +278,12 @@ public class Enemy : MonoBehaviour {
 
 
 			RaycastHit hit;
-			//if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit) && Vector3.Distance(hit.collider.ClosestPoint(transform.position), transform.position) &lt; 8 || rotating == true && hit.collider != null)
-			if (Physics.SphereCast(transform.position, 3, transform.TransformDirection(Vector3.forward), out hit, 18) && Vector3.Distance(hit.point, transform.position) &lt; 8) //collider.ClosestPoint(transform.position)
+			//if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit) && Vector3.Distance(hit.collider.ClosestPoint(transform.position), transform.position) < 8 || rotating == true && hit.collider != null)
+			if (Physics.SphereCast(transform.position, 3, transform.TransformDirection(Vector3.forward), out hit, 18) && Vector3.Distance(hit.point, transform.position) < 8) //collider.ClosestPoint(transform.position)
 			{
 				RotateToPosition(hit.normal, 0.1f);
 
-				if (hit.transform.root.gameObject.tag == "player" && State == States.Attack && Vector3.Distance(transform.position, target.transform.position) &lt;= stoppingDistance || AttackTime &lt; 10)
+				if (hit.transform.root.gameObject.tag == "player" && State == States.Attack && Vector3.Distance(transform.position, target.transform.position) <= stoppingDistance || AttackTime < 10)
 				{
 					EnterPatrolMode();
 				}else if (State == States.Attack && hit.transform.root.tag != "player")
@@ -179,7 +292,7 @@ public class Enemy : MonoBehaviour {
 				}
 
 
-			} else if (hit.collider == null && target != null && State == States.Attack || Vector3.Distance(hit.point, transform.position) &gt; 8 && target != null && State == States.Attack)
+			} else if (hit.collider == null && target != null && State == States.Attack || Vector3.Distance(hit.point, transform.position) > 8 && target != null && State == States.Attack)
 			{
 				RotateToPosition(target.transform.position - transform.position, 0.1f);
 			}
@@ -193,15 +306,15 @@ public class Enemy : MonoBehaviour {
 		rb.AddForce(-(collision.contacts[0].point - transform.position) * 2, ForceMode.Impulse);
 		GameObject ColParticles = Instantiate(CollisionParticles);
 		ColParticles.transform.position = collision.contacts[0].point;
-		if (LastCollision == target.GetComponent&lt;Player&gt;().LastCollision && !scored && health &lt;= 0)
+		if (LastCollision == target.GetComponent<Player>().LastCollision && !scored && health <= 0)
 		{
-			target.GetComponent&lt;Player&gt;().AddScore(100);
-			GameObject.FindWithTag("DialogueManager").GetComponent&lt;DialogueManager&gt;().AddDialogue("That's one way to use that debris I suppose.");
+			target.GetComponent<Player>().AddScore(100);
+			GameObject.FindWithTag("DialogueManager").GetComponent<DialogueManager>().AddDialogue("That's one way to use that debris I suppose.");
 			scored = true;
 		}
-		if (collision.gameObject.GetComponent&lt;Rigidbody&gt;())
+		if (collision.gameObject.GetComponent<Rigidbody>())
 		{
-			collision.gameObject.GetComponent&lt;Rigidbody&gt;().AddForce((collision.contacts[0].point - transform.position) * 8, ForceMode.Impulse);
+			collision.gameObject.GetComponent<Rigidbody>().AddForce((collision.contacts[0].point - transform.position) * 8, ForceMode.Impulse);
 		}
 
 	}
@@ -223,16 +336,16 @@ public class Enemy : MonoBehaviour {
 	public void Damage(int amount)
 	{
 		health -= amount;
-		if (health &lt;= startHealth / 2)
+		if (health <= startHealth / 2)
 		{
 			dmgState1.Play();
 		}
-		if (health &lt;= startHealth / 4)
+		if (health <= startHealth / 4)
 		{
 			dmgState2.Play();
 		}
 
-		if (health &lt;= 0)
+		if (health <= 0)
 		{
 			Die();
 		}
@@ -254,7 +367,7 @@ public class Enemy : MonoBehaviour {
 	void Explode()
 	{
 		GameObject particle = Instantiate(DeathParticle);
-		GetComponent&lt;AudioSource&gt;().Play();
+		GetComponent<AudioSource>().Play();
 		particle.transform.position = this.transform.position;
 		dmgState1.gameObject.transform.SetParent(particle.transform, true);
 		dmgState1.Stop();
@@ -271,20 +384,20 @@ public class Enemy : MonoBehaviour {
 	void Shoot()
 	{
 		GameObject BulletClone = Instantiate(Bullet);
-		BulletClone.GetComponent&lt;Renderer&gt;().material = EnergyMat;
+		BulletClone.GetComponent<Renderer>().material = EnergyMat;
 		BulletClone.transform.position = transform.position;
 		BulletClone.transform.rotation = transform.rotation;
 
-		if (target.GetComponent&lt;Rigidbody&gt;() != null)
+		if (target.GetComponent<Rigidbody>() != null)
 		{
-			BulletClone.transform.LookAt(target.transform.position + target.GetComponent&lt;Rigidbody&gt;().velocity);
+			BulletClone.transform.LookAt(target.transform.position + target.GetComponent<Rigidbody>().velocity);
 		}
 		else
 		{
 			BulletClone.transform.LookAt(target.transform.position + target.transform.forward * 4);
 		}
 
-		BulletClone.GetComponent&lt;Rigidbody&gt;().AddRelativeForce(BulletClone.transform.forward * 40, ForceMode.VelocityChange);
+		BulletClone.GetComponent<Rigidbody>().AddRelativeForce(BulletClone.transform.forward * 40, ForceMode.VelocityChange);
 	}
 
 	public void SetTarget(GameObject trgt)
@@ -296,111 +409,29 @@ public class Enemy : MonoBehaviour {
 	{
 		foreach (GameObject energy in EnergyColors)
 		{
-			if (energy.GetComponent&lt;Renderer&gt;())
-				energy.GetComponent&lt;Renderer&gt;().material = EnergyMat;
-			if (energy.GetComponentInChildren&lt;ParticleSystemRenderer&gt;())
-				energy.GetComponentInChildren&lt;ParticleSystemRenderer&gt;().material = EnergyMat;
-			if (energy.GetComponentInChildren&lt;TrailRenderer&gt;())
-				energy.GetComponentInChildren&lt;TrailRenderer&gt;().material = EnergyMat;
+			if (energy.GetComponent<Renderer>())
+				energy.GetComponent<Renderer>().material = EnergyMat;
+			if (energy.GetComponentInChildren<ParticleSystemRenderer>())
+				energy.GetComponentInChildren<ParticleSystemRenderer>().material = EnergyMat;
+			if (energy.GetComponentInChildren<TrailRenderer>())
+				energy.GetComponentInChildren<TrailRenderer>().material = EnergyMat;
 
-			if (energy.GetComponentInChildren&lt;ParticleSystem&gt;())
+			if (energy.GetComponentInChildren<ParticleSystem>())
 			{
-				ParticleSystem.MainModule main = energy.GetComponentInChildren&lt;ParticleSystem&gt;().main;
+				ParticleSystem.MainModule main = energy.GetComponentInChildren<ParticleSystem>().main;
 				main.startColor = EnergyMat.color;
 			}
 		}
 	}
 }
+			</code></pre>
 
-		</pre>
+		</div>
 	</div>
-	
-<h3 id="Block2">Player health and healing</h3>
-<p>
-In this game the player has 2 health bars. The first health bar is a shield that will absorb all damage the player takes first. The shield will start regenerating after the player has not taken damage for a few seconds.
-The second health bar is the actual health bar, if this bar reaches 0 the game will be over. The healthbar onky depletes when the shield is already fully depleted and is harder to restore.<br>
-unlike the shield, health does not regenerate over time, to restore health the player needs to find an active healing station.<br>
-About 8 healing stations are spread through the arena but only 2 will be active at a time. Every time the player uses an active healing station it will disable, forcing the player to explore and find which one has activated.
 
 
-</p>
-<div class=CodeWindow>
-	<a href="../samples/SBSHealStation.html" class="previewLink">
-		<div><p>Heal station manager(Click for full view)</p></div>
-	</a>
-	<pre class="Preview">
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class HealStationManager : MonoBehaviour {
-
-    [SerializeField]
-    int ActiveAmount;
-
-    [SerializeField]
-    List&lt;HealStation&gt; HealStations = new List&lt;HealStation&gt;();
-
-
-    List&lt;HealStation&gt; Actives = new List&lt;HealStation&gt;();
-    List&lt;HealStation&gt; InActives = new List&lt;HealStation&gt;();
-	// Use this for initialization
-	void Start () {
-        Getstations();
-        SetManager();
-	}
-	
-    public void Getstations()
-    {
-        Actives.Clear();
-        InActives.Clear();
-
-        foreach (HealStation station in HealStations)
-        {
-            if (station.Active == true)
-            {
-                Actives.Add(station);
-            }else if (station.Skip == false)
-            {
-                InActives.Add(station);
-            }
-        }
-        if (Actives.Count &lt; ActiveAmount)
-        {
-            PickNew();
-        }
-        ResetSkippables();
-    }
-
-    void PickNew()
-    {
-        int RandomStation = Random.Range(0, InActives.Count);
-        HealStation pickedStation = InActives[RandomStation];
-        pickedStation.ToggleActive();
-        Getstations();
-    }
-
-    void ResetSkippables()
-    {
-        foreach (HealStation station in HealStations)
-        {
-            station.Skip = false;
-        }
-    }
-
-    void SetManager()
-    {
-        foreach (HealStation station in HealStations)
-        {
-            station.Manager = this;
-        }
-    }
-}
-
-	</pre>
 </div>
 
-</div>
 </div>
 
 </body>

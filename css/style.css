@@ -3,11 +3,31 @@
 
 @layer components {
 	.MainTitle {
-		@apply text-4xl text-purple-600 font-bold;
+		@apply text-4xl text-purple-600 font-extrabold;
+	}
+
+	.SubTitle {
+		@apply text-2xl font-bold text-white;
+	}
+
+	.MainText {
+		@apply text-white;
 	}
 
 	.ProjectTitle {
-		@apply text-center font-bold;
+		@apply text-center font-bold text-white;
+	}
+
+	.PageImg {
+		@apply w-1/2;
+	}
+
+	.PageContentSection {
+		@apply my-10 bg-gray-800 rounded-[10px];
+	}
+
+	.CodeWindow {
+		@apply overflow-auto rounded-[10px] pr-2 pl-2 bg-linear-135 from-purple-900 to-blue-950 to-90%;
 	}
 }
 
@@ -16,13 +36,17 @@
 body {  
 	margin: 0;
 	background-color: #040303;
-	background-position: center;
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-size: cover;
 	color: #ffffff;
 	@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap");
 	font-family: Oswald, sans-serif;
+}
+
+p {
+	margin-top: 2px;
+	margin-bottom: 10px;
 }
 
 body.frontpage {
@@ -56,6 +80,8 @@ ul.topnav {
 
 video.PageVideo {
 	width: 100%;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 ul.topnav a {
@@ -77,11 +103,6 @@ ul.topnav a:hover:not(.active) {
 ul.topnav a:active {
 	background-color: #00cd55;
 	color: #ffffff;
-}
-
-div.CodeWindow {
-text-align: left;
-width: 80%;
 }
 
 div.CodeWindowLB {

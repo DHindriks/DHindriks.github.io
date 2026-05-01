@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="../dist/output.css" />
 </head>
-<body class="bg-[url(../images/DTTBanner.PNG)]">
+<body class="bg-[url(../images/EL3.PNG)] bg-center">
 	<ul class="topnav">
 		<li><a href="../index.html">Home</a></li>
 		<li><a href="../index.html#Top">About</a></li>
@@ -18,24 +18,149 @@
 
 <div class="contentlarge bg-gray-800">
 	<h1 class="MainTitle">Echolocation</h1>
-	<h4>A short horror game where the player explores the dark sea floor in a small submarine, with the goal of scanning wreckages.
-	</h4>
-	<br>
-	<img src="../images/EL2.PNG" width="75%" align="middle">
-	<br>
-</div>
+	<p>
+		A short horror game prototype made in Unity.<br>
+		This prototype was made for a course called Rapid Prototyping, the goal of this course was to make quick game prototypes in a 2-week timespan.<br>
+		Echolocation is one of these prototypes, which was made with the themes "horror" and "Low visibility".
+	</p>
+	<div class="CodeWindow w-fit"> 
+		<a href="https://github.com/DHindriks/Echolocation" class="m-2">
+			<p>View the full project on Github</p>
+			<img src="../images/github_PNG20.png" class="imgContact" alt="Github logo">
+		</a>
+	</div>
+
+	</div>
 
 <div class="contentlarge bg-gray-950">
-	<h3>About the project</h3>
-	<p>EchoLocation is the most developed prototype in a series of rapid prototypes that I worked on for a course at my study.</p>
-	<img src="../images/EL1.PNG" width="75%" align="middle">
-	<br><br>
-	<p>The course that Echolocation was made for is about making rapid prototypes to be able to show and test ideas quickly, these prototypes were made in 2 weeks each with a certain theme in mind.</p>
-	<p>The theme for Echolocation was "blind/low visibility", and the first version of it was purely about navigating through the dark deep sea.<br> 
-		After making the first version I worked on the prototype for 2 more weeks to add the theme "horror" to it as well.
-	</p>
-	<img src="../images/EL3.PNG" width="75%" align="middle">
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">About the project</h3>
+		<p>
+			In this game the player controls a small submarine and is tasked with scanning a number of spaceship wreckages on the dark ocean floor.
+			To be able to navigate through the darkness, the player has headlight with a shorter range, and an echolocation pulse that will briefly light up the surrounding area.
+		</p>
+		<p>
+			A dangerous robot also patrols the area that needs to be avoided, it will try to grab any intruder it spots with its search light.
+		</p>
 
+		<div class="mx-auto block m-5">
+			<img src="../images/EL2.PNG" class="PageImg">
+			<p class="italic text-gray-400">A mostly dark view, with robot search lights in the distance.</p>
+		</div>
+
+		<div class="mx-auto block m-5">
+			<img src="../images/EL1.PNG" class="PageImg">
+			<p class="italic text-gray-400">One of the wrecks found on the ocean floor, players need to stay near these for a while to fully scan them.</p>
+		</div>
+	</div>
+
+	<div class="contentlarge PageContentSection">
+		<h3 class="SubTitle">Code sample: Robot behaviour</h3>
+		<p>
+			The robot that patrols the area functions using a statemachine: In the roam state it follows a set path, and when it notices the player it switches into the attack state.
+		</p>
+
+		<p> 
+			This script is the logic behind the robot, it switches to attack mode when when the player enters its view collider.<br>
+			It's not immediately game-over for the player if they are spotted, instead the robot will pull the player towards it.<br>
+			While being pulled the player is still able to escape by moving away from the robot and escaping its tractor beam. 
+		</p>
+		<div class="CodeWindow">
+			<pre><code>
+public enum States
+{
+    Roam,
+    Attack
+}
+
+public class Boss_AI : MonoBehaviour
+{
+    States Currentstate;
+    [SerializeField] float Pullforce = 10;
+    [SerializeField] Animator animator;
+    [SerializeField] Cinemachine.CinemachineDollyCart dollyCart;
+    [SerializeField] AudioSource AttackRoar;
+    [SerializeField] Cinemachine.CinemachineVirtualCamera PlayerCam;
+    [SerializeField] CanvasGroup GameoverScreen;
+
+
+    GameObject Target;
+    Rigidbody TargetRb;
+
+    void Start()
+    {
+        SetState(States.Roam);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            SetState(States.Attack);
+            Target = other.gameObject;
+            TargetRb = Target.GetComponent<Rigidbody>();
+        }
+    }
+
+	    void SetState(States NewState)
+    {
+        switch (NewState)
+        {
+            case States.Roam:
+                animator.SetBool("AttackMode", false);
+                Currentstate = States.Roam;
+                GameoverScreen.alpha = 0;
+                PlayerCam.GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 0;
+                dollyCart.m_Speed = 15;
+                break;
+
+            case States.Attack:
+                Currentstate = States.Attack;
+                animator.SetBool("AttackMode", true);
+                dollyCart.m_Speed = 0;
+                PlayerCam.GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 2;
+                AttackRoar.Play();
+                break;
+
+
+        }
+
+    }
+
+    void Update()
+    {
+        if (Currentstate == States.Attack)
+        {
+            transform.LookAt(Target.transform);
+
+            TargetRb.AddForce((transform.position - Target.transform.position) * Pullforce * Time.deltaTime);
+
+            if (Vector3.Distance(Target.transform.position, transform.position) <= 15)
+            {
+                GameoverScreen.alpha = 1 - (Vector3.Distance(Target.transform.position, transform.position) / 15) + 0.2f;
+            }
+            else if (Vector3.Distance(Target.transform.position, transform.position) > 100)
+            {
+                SetState(States.Roam);
+            }
+        }
+    }
+			</code></pre>
+
+		</div>
+		<p>
+			When in the roaming state, the robot makes use of a Cinemachine dolly track, this is one of Unity's additional packages that add more camera control.<br>
+			While this function is meant to move cameras, any game object can be attached to this track.<br>
+			The dolly track is made by assigning a collection of waypoints, it then applies bezier interpolation to make the track smooth, having this system already in place saved some time in the development of this prototype.
+
+		</p>
+		<div class="mx-auto block m-5">
+			<img src="../images/EL4.PNG" class="PageImg">
+			<p class="italic text-gray-400">The green line is the path that the robot takes in the roam state.</p>
+		</div>
+	</div>
+
+</div>
 
 </div>
 
