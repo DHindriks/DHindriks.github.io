@@ -123,8 +123,9 @@
 	<div class="contentlarge PageContentSection">
 		<h3 class="SubTitle">Code sample: BeamNG's extension interface</h3>
 		<p>
-			A lot of the logic behind the extension is purely written in the LUA language, but some of the BeamNG.tech-specific code was more difficult to figure out.<br> 
-			This function handles the user interface for the menu that opens within BeamNG.tech, code like this had to be reverse-engineered from other scripts because there is not much documentation on BeamNG.tech
+			While the documentation on the BeamNG.tech API is not extensive, the BeamNG company does provide a good tutorial on how to get started with making extensions.<br> 
+			The tutorial shows the basic script to add a new tool button in BeamNG.tech's toolbox, which became the starting point of this script.<br><br>
+			The BeamNG.tech-specific "editor.beginWindow()" is set when the tool associated with that specific script is activated, this part of the code handles the formatting and functionality of the UI elements in the import menu.
 		</p>
 
 		<div class="CodeWindow">
