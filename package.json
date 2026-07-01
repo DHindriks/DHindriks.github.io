@@ -5,7 +5,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tailwindcss -i ./css/style.css -o ./dist/output.css --watch",
-    "build": "tailwindcss -i ./css/style.css -o ./dist/output.css --minify"
+    "Deprbuild": "tailwindcss -i ./css/style.css -o ./dist/output.css --minify",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -20,7 +23,11 @@
   "homepage": "https://github.com/DHindriks/DHindriks.github.io#readme",
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.1",
-    "tailwindcss": "^4.2.1"
+    "tailwindcss": "^4.2.1",
+    "vite": "^8.1.1"
   },
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.2"
+  }
 }
