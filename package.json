@@ -23,6 +23,7 @@
   "homepage": "https://github.com/DHindriks/DHindriks.github.io#readme",
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.1",
+    "glob": "^13.0.6",
     "tailwindcss": "^4.2.1",
     "vite": "^8.1.1"
   },
