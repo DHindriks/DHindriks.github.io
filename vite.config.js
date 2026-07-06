@@ -17,7 +17,6 @@ export default defineConfig({
   plugins: [tailwindcss()],
   base: '/',
   build: {
-    sourcemap: false,
     rollupOptions: {
       input: htmlFiles, 
     },
